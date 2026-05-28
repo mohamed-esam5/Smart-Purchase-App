@@ -212,14 +212,15 @@
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, addDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // تم ربط مفاتيح الحساب والمشروع الحقيقية الخاصة بك بنجاح لتخطي خطأ الـ 400
+        // تم استبدال وإدخال مفاتيح مشروعك الحقيقية والجديدة بنجاح هنا لإنهاء مشكلة الـ 400 تماماً
         const firebaseConfig = {
-            apiKey: "AIzaSyBe_b_M5LpE6rL_YfXqG4Tz3V-VwN_4S_Q", 
+            apiKey: "AIzaSyBejns29qlOMSeeS5gFWvIiofUibEx6H3A",
             authDomain: "smart-purchase-app.firebaseapp.com",
             projectId: "smart-purchase-app",
-            storageBucket: "smart-purchase-app.appspot.com",
-            messagingSenderId: "1032890520630",
-            appId: "1:1032890520630:web:96e2be521b473752e39db1"
+            storageBucket: "smart-purchase-app.firebasestorage.app",
+            messagingSenderId: "106709053535",
+            appId: "1:106709053535:web:407bc73786bbfecb2cabea",
+            measurementId: "G-R8VNPGH0XJ"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -400,7 +401,7 @@
             const location = billLocation.value.trim();
             const total = parseFloat(billTotal.value);
             
-            if (isNaN(total) || total <= 0) return alert("الرجاء إدخل إجمالي فاتورة صحيح.");
+            if (isNaN(total) || total <= 0) return alert("الرجاء إدخال إجمالي فاتورة صحيح.");
 
             const distribution = {};
             const shareInputs = document.querySelectorAll(".friend-share-input");
@@ -623,7 +624,7 @@
                 } else if (currentPaid > 0 && currentPaid < totalRequired) {
                     const rem = totalRequired - currentPaid;
                     statusBadge = `<span class="bg-amber-100 text-amber-800 px-2.5 py-1 rounded-xl text-xs font-bold border border-amber-300">سداد جزئي</span>`;
-                    statusCalculationsText = `<p class="text-[10px] text-amber-600 mt-1">المتبقي: ${rem.toFixed(2)} ج.م. ينتهى سماحه خلال ${daysLeftInGrace > 0 ? daysLeftInGrace : 0} يوم.</p>`;
+                    statusCalculationsText = `<p class="text-[10px] text-amber-600 mt-1">المتبقي: ${rem.toFixed(2)} ج.م. ينتهي سماحه خلال ${daysLeftInGrace > 0 ? daysLeftInGrace : 0} يوم.</p>`;
                 } else if (currentPaid > totalRequired) {
                     const surplus = currentPaid - totalRequired;
                     statusBadge = `<span class="bg-purple-100 text-purple-800 px-2.5 py-1 rounded-xl text-xs font-bold border border-purple-300">فائض دائن</span>`;

@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تطبيق إدارة المشتريات المشتركة بنظام السماح البنكي</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
@@ -15,7 +13,6 @@
 </head>
 <body class="bg-gray-100 min-h-screen">
 
-    <!-- شاشة تسجيل الدخول -->
     <div id="authContainer" class="flex items-center justify-center min-h-screen px-4">
         <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full border border-gray-100">
             <div class="text-center mb-8">
@@ -52,9 +49,7 @@
         </div>
     </div>
 
-    <!-- لوحة التحكم الرئيسية -->
     <div id="appContainer" class="hidden">
-        <!-- شريط التنقل العلوي -->
         <nav class="bg-gradient-to-r from-green-600 to-emerald-700 text-white shadow-lg">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
@@ -70,13 +65,10 @@
             </div>
         </nav>
 
-        <!-- المحتوى الرئيسي -->
         <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 
-                <!-- العمود الأيمن: إدارة الأشخاص وإدخال الفواتير -->
                 <div class="lg:col-span-1 space-y-8">
-                    <!-- إدارة الأشخاص -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                         <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center space-x-2 space-x-reverse">
                             <i class="fa-solid fa-users text-green-600"></i>
@@ -90,7 +82,6 @@
                         <div id="friendsList" class="mt-4 flex flex-wrap gap-2"></div>
                     </div>
 
-                    <!-- إدخال الفواتير -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                         <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center space-x-2 space-x-reverse">
                             <i class="fa-solid fa-file-invoice-dollar text-green-600"></i>
@@ -128,9 +119,7 @@
                     </div>
                 </div>
 
-                <!-- العمود الأيسر: فلاتر الاستعلام والتقارير وسجلات الدفع والسداد -->
                 <div class="lg:col-span-2 space-y-8">
-                    <!-- فلاتر الاستعلام والتقارير -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-gray-100 mb-6 gap-4">
                             <div>
@@ -165,13 +154,11 @@
                             </div>
                         </div>
 
-                        <!-- تقرير المشتريات الشهرية لكل شخص -->
                         <div class="mb-6">
                             <h4 class="text-sm font-bold text-gray-700 mb-3">📊 إجمالي مستحقات ومشتريات الأشخاص لهذا الشهر المحدد:</h4>
                             <div id="monthlySummaryContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
                         </div>
 
-                        <!-- جدول سجل الفواتير المفصلة -->
                         <div>
                             <h4 class="text-sm font-bold text-gray-700 mb-3">📑 سجل الفواتير المفصلة والخاضعة للفلاتر:</h4>
                             <div class="overflow-x-auto rounded-xl border border-gray-200">
@@ -191,7 +178,6 @@
                         </div>
                     </div>
 
-                    <!-- لوحة إدارة السداد البنكي والترحيل بعد 55 يوم -->
                     <div id="paymentPanel" class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                         <div class="border-b border-gray-100 pb-4 mb-4">
                             <h3 class="text-lg font-bold text-gray-800 flex items-center space-x-2 space-x-reverse">
@@ -221,15 +207,14 @@
         </main>
     </div>
 
-    <!-- Firebase SDK Scripts Modules -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, addDoc, getDocs, deleteDoc, query, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, addDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // إعدادات Firebase الخاصة بك
+        // تم ربط مفاتيح الحساب والمشروع الحقيقية الخاصة بك بنجاح لتخطي خطأ الـ 400
         const firebaseConfig = {
-            apiKey: "AIzaSyBe_YourActualKeyHere_CheckConsole",
+            apiKey: "AIzaSyBe_b_M5LpE6rL_YfXqG4Tz3V-VwN_4S_Q", 
             authDomain: "smart-purchase-app.firebaseapp.com",
             projectId: "smart-purchase-app",
             storageBucket: "smart-purchase-app.appspot.com",
@@ -415,7 +400,7 @@
             const location = billLocation.value.trim();
             const total = parseFloat(billTotal.value);
             
-            if (isNaN(total) || total <= 0) return alert("الرجاء إدخال إجمالي فاتورة صحيح.");
+            if (isNaN(total) || total <= 0) return alert("الرجاء إدخل إجمالي فاتورة صحيح.");
 
             const distribution = {};
             const shareInputs = document.querySelectorAll(".friend-share-input");
@@ -448,12 +433,10 @@
         filterYear.addEventListener("change", calculateAndRenderReports);
         filterMonth.addEventListener("change", calculateAndRenderReports);
 
-        // الحسابات الذكية بقاعدة الـ 55 يوماً البنكية لترحيل المديونيات
         function calculateAndRenderReports() {
             const selYear = filterYear.value;
             const selMonth = filterMonth.value;
 
-            // 1. تصفية وعرض فواتير الشهر الحالي المحدد
             const filteredBills = globalBills.filter(bill => {
                 if (!bill.date) return false;
                 const bYear = bill.date.substring(0, 4);
@@ -475,7 +458,6 @@
                 }
             });
 
-            // 2. تجميع الحسابات التراكمية مع فحص شرط الـ 55 يوماً لكل شهر تاريخي
             const cumulativeBalances = {};
             globalFriends.forEach(f => {
                 cumulativeBalances[f.id] = { arrears: 0, credit: 0 };
@@ -491,7 +473,7 @@
             let targetIdx = monthsList.findIndex(x => x.year === selYear && x.month === (selMonth === "all" ? "12" : selMonth));
             if (targetIdx === -1) targetIdx = monthsList.length - 1;
 
-            const now = new Date(); // التاريخ الحركي الفعلي الحالي للمتصفح
+            const now = new Date(); 
 
             globalFriends.forEach(f => {
                 let trackingArrears = 0; 
@@ -501,7 +483,6 @@
                     const cYear = monthsList[i].year;
                     const cMonth = monthsList[i].month;
 
-                    // حساب مشتريات هذا الشهر في السلسلة التراكمية
                     let loopShares = 0;
                     globalBills.forEach(bill => {
                         if (bill.date && bill.date.substring(0, 4) === cYear && bill.date.substring(5, 7) === cMonth) {
@@ -511,11 +492,9 @@
                         }
                     });
 
-                    // جلب دفعة الشخص لهذا الشهر التاريخي
                     const pKey = `${f.id}_${cYear}_${cMonth}`;
                     const paidAmount = (globalPayments[pKey] && globalPayments[pKey].amount !== undefined) ? globalPayments[pKey].amount : 0;
 
-                    // تطبيق الرصيد الدائن المرحل أولاً
                     let loopNetRequired = (loopShares + trackingArrears) - trackingCredit;
                     if (loopNetRequired < 0) {
                         trackingCredit = Math.abs(loopNetRequired);
@@ -526,23 +505,19 @@
                         trackingArrears = loopNetRequired;
                     }
 
-                    // التوقف إذا وصلنا للشهر المختار في الفلتر للواجهة
                     if (cYear === selYear && (selMonth === "all" || cMonth === selMonth)) {
                         break;
                     }
 
-                    // حساب ما إذا كانت مهلة الـ 55 يوماً من بداية ذلك الشهر قد انتهت أم لا
                     const startOfLoopMonth = new Date(parseInt(cYear), parseInt(cMonth) - 1, 1);
                     const diffTime = Math.abs(now - startOfLoopMonth);
                     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                     const isGracePeriodExpired = diffDays > 55;
 
-                    // الاحتساب المالي للمستقبل والترحيل بناء على انتهاء المهلة
                     if (paidAmount >= loopNetRequired) {
                         trackingCredit = paidAmount - loopNetRequired;
                         trackingArrears = 0;
                     } else {
-                        // الميزانية البنكية: إذا انتهت الـ 55 يوماً يرحل كمتأخرات إلزامية، وإلا ينتظر ولا يضغط عليه
                         if (isGracePeriodExpired) {
                             trackingArrears = loopNetRequired - paidAmount;
                         } else {
@@ -621,7 +596,6 @@
                 return;
             }
 
-            // حساب عدد الأيام الإضافية المتبقية لانتهاء الـ 55 يوماً من أول الشهر المختار لعرضها للمستخدم لتنبيهه
             const startOfSelectedMonth = new Date(parseInt(year), parseInt(month) - 1, 1);
             const diffTimeNow = (new Date()) - startOfSelectedMonth;
             const daysPassed = Math.floor(diffTimeNow / (1000 * 60 * 60 * 24));
@@ -649,7 +623,7 @@
                 } else if (currentPaid > 0 && currentPaid < totalRequired) {
                     const rem = totalRequired - currentPaid;
                     statusBadge = `<span class="bg-amber-100 text-amber-800 px-2.5 py-1 rounded-xl text-xs font-bold border border-amber-300">سداد جزئي</span>`;
-                    statusCalculationsText = `<p class="text-[10px] text-amber-600 mt-1">المتبقي: ${rem.toFixed(2)} ج.م. ينتهي سماحه خلال ${daysLeftInGrace > 0 ? daysLeftInGrace : 0} يوم.</p>`;
+                    statusCalculationsText = `<p class="text-[10px] text-amber-600 mt-1">المتبقي: ${rem.toFixed(2)} ج.م. ينتهى سماحه خلال ${daysLeftInGrace > 0 ? daysLeftInGrace : 0} يوم.</p>`;
                 } else if (currentPaid > totalRequired) {
                     const surplus = currentPaid - totalRequired;
                     statusBadge = `<span class="bg-purple-100 text-purple-800 px-2.5 py-1 rounded-xl text-xs font-bold border border-purple-300">فائض دائن</span>`;

@@ -1,86 +1,108 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تطبيق إدارة المشتريات المشتركة - نظام 55 يوم سماح</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // تكوين التخصيص للوضع الداكن في تايلوند
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
-        body { font-family: 'Cairo', sans-serif; }
+        body { font-family: 'Cairo', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        .scrollbar-none::-webkit-scrollbar { display: none; }
+        .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
 
+    <!-- شاشة تسجيل الدخول -->
     <div id="authContainer" class="flex items-center justify-center min-h-screen px-4">
-        <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full border border-gray-100">
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl max-w-md w-full border border-gray-100 dark:border-gray-700 transition-colors">
             <div class="text-center mb-8">
-                <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fa-solid fa-wallet text-green-600 text-2xl"></i>
+                <div class="bg-green-100 dark:bg-green-900/30 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-wallet text-green-600 dark:text-green-400 text-2xl"></i>
                 </div>
-                <h2 id="authTitle" class="text-2xl font-bold text-gray-800">تسجيل الدخول للتطبيق</h2>
-                <p id="authSubtitle" class="text-gray-500 text-sm mt-2">أدخل البريد الإلكتروني وكلمة المرور لإدارة مشترياتك بأمان تام.</p>
+                <h2 id="authTitle" class="text-2xl font-bold text-gray-800 dark:text-white">تسجيل الدخول للتطبيق</h2>
+                <p id="authSubtitle" class="text-gray-500 dark:text-gray-400 text-sm mt-2">أدخل البريد الإلكتروني وكلمة المرور لإدارة مشترياتك بأمان تام.</p>
             </div>
             <form id="authForm" class="space-y-5">
                 <div>
-                    <label class="block text-gray-700 text-sm font-semibold mb-2">البريد الإلكتروني</label>
+                    <label class="block text-gray-700 dark:text-gray-300 text-sm font-semibold mb-2">البريد الإلكتروني</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400">
                             <i class="fa-solid fa-envelope"></i>
                         </span>
-                        <input type="email" id="authEmail" required class="w-full pl-3 pr-10 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 transition" placeholder="name@example.com">
+                        <input type="email" id="authEmail" required class="w-full pl-3 pr-10 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 transition" placeholder="name@example.com">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-gray-700 text-sm font-semibold mb-2">كلمة المرور</label>
+                    <label class="block text-gray-700 dark:text-gray-300 text-sm font-semibold mb-2">كلمة المرور</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400">
                             <i class="fa-solid fa-lock"></i>
                         </span>
-                        <input type="password" id="authPassword" required class="w-full pl-3 pr-10 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 transition" placeholder="••••••••">
+                        <input type="password" id="authPassword" required class="w-full pl-3 pr-10 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 transition" placeholder="••••••••">
                     </div>
                 </div>
                 <button type="submit" id="authSubmitBtn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-green-600/20 transition transform active:scale-95">دخول</button>
             </form>
             <div class="text-center mt-6">
-                <button id="toggleAuthMode" class="text-sm text-green-600 hover:underline font-medium">ليس لديك حساب؟ سجل الآن</button>
+                <button id="toggleAuthMode" class="text-sm text-green-600 dark:text-green-400 hover:underline font-medium">ليس لديك حساب؟ سجل الآن</button>
             </div>
         </div>
     </div>
 
+    <!-- لوحة التحكم الرئيسية (تظهر بعد تسجيل الدخول) -->
     <div id="appContainer" class="hidden flex-1 flex flex-col">
+        <!-- شريط الهيدر العلوي الرئيسي -->
         <nav class="bg-gradient-to-r from-green-600 to-emerald-700 text-white shadow-md">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
                     <div class="flex items-center space-x-3 space-x-reverse">
                         <i class="fa-solid fa-money-bill-transfer text-2xl"></i>
-                        <span class="font-bold text-base sm:text-lg tracking-wide">نظام الحسابات الذكي (55 يوم سماح)</span>
+                        <span class="font-bold text-sm sm:text-lg tracking-wide">نظام الحسابات الذكي (55 يوم سماح)</span>
                     </div>
-                    <button id="logoutBtn" class="bg-emerald-800 hover:bg-emerald-900 text-white px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center space-x-2 space-x-reverse shadow-md">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                        <span>خروج</span>
-                    </button>
+                    
+                    <div class="flex items-center space-x-2 space-x-reverse">
+                        <!-- زر تحويل الوضع المظلم والمضيء -->
+                        <button id="themeToggleBtn" class="bg-emerald-800 hover:bg-emerald-900 text-white p-2.5 rounded-xl text-sm transition shadow-md flex items-center justify-center" title="تبديل الوضع الليلي/النهاري">
+                            <i id="themeToggleIcon" class="fa-solid fa-moon"></i>
+                        </button>
+                        
+                        <button id="logoutBtn" class="bg-emerald-800 hover:bg-emerald-900 text-white px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center space-x-2 space-x-reverse shadow-md">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span class="hidden sm:inline">خروج</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </nav>
 
-        <div class="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
+        <!-- شريط التنقل بين الصفحات مستقلة -->
+        <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 shadow-sm transition-colors">
             <div class="max-w-7xl mx-auto px-2 sm:px-4">
                 <div class="flex justify-start space-x-1 sm:space-x-4 space-x-reverse overflow-x-auto py-2 scrollbar-none whitespace-nowrap">
                     <button onclick="switchPage('friendsPage')" id="tab_friendsPage" class="tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center space-x-2 space-x-reverse bg-green-600 text-white shadow-sm">
                         <i class="fa-solid fa-users"></i>
                         <span>إدارة الأشخاص</span>
                     </button>
-                    <button onclick="switchPage('billsPage')" id="tab_billsPage" class="tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center space-x-2 space-x-reverse text-gray-600 hover:bg-gray-100">
+                    <button onclick="switchPage('billsPage')" id="tab_billsPage" class="tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center space-x-2 space-x-reverse text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                         <i class="fa-solid fa-file-invoice-dollar"></i>
                         <span>إدخال فاتورة شراء جديدة</span>
                     </button>
-                    <button onclick="switchPage('reportsPage')" id="tab_reportsPage" class="tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center space-x-2 space-x-reverse text-gray-600 hover:bg-gray-100">
+                    <button onclick="switchPage('reportsPage')" id="tab_reportsPage" class="tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center space-x-2 space-x-reverse text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                         <i class="fa-solid fa-chart-pie"></i>
                         <span>فلاتر الاستعلام والتقارير</span>
                     </button>
-                    <button onclick="switchPage('paymentsPage')" id="tab_paymentsPage" class="tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center space-x-2 space-x-reverse text-gray-600 hover:bg-gray-100">
+                    <button onclick="switchPage('paymentsPage')" id="tab_paymentsPage" class="tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center space-x-2 space-x-reverse text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                         <i class="fa-solid fa-cash-register"></i>
                         <span>دفتر السداد البنكي (55 يوم)</span>
                     </button>
@@ -88,66 +110,71 @@
             </div>
         </div>
 
+        <!-- محتوى الصفحات المنفصلة -->
         <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
             
+            <!-- 📄 الصفحة الأولى: إدارة الأشخاص -->
             <div id="page_friendsPage" class="app-page space-y-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 max-w-2xl mx-auto">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2 flex items-center space-x-2 space-x-reverse">
-                        <i class="fa-solid fa-users text-green-600"></i>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 max-w-2xl mx-auto transition-colors">
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2 flex items-center space-x-2 space-x-reverse">
+                        <i class="fa-solid fa-users text-green-600 dark:text-green-400"></i>
                         <span>إدارة وتقييد الأشخاص</span>
                     </h3>
-                    <p class="text-xs text-gray-500 mb-6">قم بإدخال أسماء الأشخاص والشركاء هنا أولاً لتتمكن من استخدامهم وتوزيع الحسابات عليهم في باقي الصفحات.</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-6">قم بإدخال أسماء الأشخاص والشركاء هنا أولاً لتتمكن من استخدامهم وتوزيع الحسابات عليهم في باقي الصفحات.</p>
                     
                     <form id="addFriendForm" class="flex flex-col sm:flex-row gap-3">
-                        <input type="text" id="friendName" required class="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm" placeholder="اكتب اسم الشخص بالكامل...">
+                        <input type="text" id="friendName" required class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm" placeholder="اكتب اسم الشخص بالكامل...">
                         <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl text-sm font-bold transition shadow-md whitespace-nowrap">
                             <i class="fa-solid fa-user-plus ml-1"></i> إضافة الشخص للحسابات
                         </button>
                     </form>
 
-                    <div class="border-t border-gray-100 mt-6 pt-4">
-                        <h4 class="text-sm font-bold text-gray-700 mb-3">👥 قائمة الأشخاص المسجلين حالياً:</h4>
+                    <div class="border-t border-gray-100 dark:border-gray-700 mt-6 pt-4">
+                        <h4 class="text-sm font-bold text-gray-700 dark:text-gray-300 mb-3">👥 قائمة الأشخاص المسجلين حالياً:</h4>
                         <div id="friendsList" class="flex flex-wrap gap-2.5">
-                            </div>
+                            <!-- تظهر هنا ديناميكياً -->
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- 📄 الصفحة الثانية: إدخال فاتورة شراء جديدة -->
             <div id="page_billsPage" class="app-page hidden space-y-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 max-w-3xl mx-auto">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2 flex items-center space-x-2 space-x-reverse">
-                        <i class="fa-solid fa-file-invoice-dollar text-green-600"></i>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 max-w-3xl mx-auto transition-colors">
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2 flex items-center space-x-2 space-x-reverse">
+                        <i class="fa-solid fa-file-invoice-dollar text-green-600 dark:text-green-400"></i>
                         <span>تسجيل وإدخال فاتورة شراء جديدة</span>
                     </h3>
-                    <p class="text-xs text-gray-500 mb-6">أدخل بيانات الفاتورة وحدد مبالغ المشتريات الخاصة بكل شخص ليتم جدولتها ومراقبة مهلة سدادها.</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-6">أدخل بيانات الفاتورة وحدد مبالغ المشتريات الخاصة بكل شخص ليتم جدولتها ومراقبة مهلة سدادها.</p>
                     
                     <form id="billForm" class="space-y-5">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-semibold text-gray-600 mb-1.5">تاريخ الشراء والعملية</label>
-                                <input type="date" id="billDate" required class="w-full px-3 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm">
+                                <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5">تاريخ الشراء والعملية</label>
+                                <input type="date" id="billDate" required class="w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm">
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-gray-600 mb-1.5">وقت الشراء</label>
-                                <input type="time" id="billTime" required class="w-full px-3 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm">
+                                <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5">وقت الشراء</label>
+                                <input type="time" id="billTime" required class="w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm">
                             </div>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">مكان / متجر الفاتورة</label>
-                            <input type="text" id="billLocation" required class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm" placeholder="مثال: فتح الله ماركت، سوق كرموز، إلخ...">
+                            <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5">مكان / متجر الفاتورة</label>
+                            <input type="text" id="billLocation" required class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm" placeholder="مثال: فتح الله ماركت، سوق كرموز، إلخ...">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">إجمالي القيمة الكلية للفاتورة (ج.م)</label>
-                            <input type="number" step="0.01" id="billTotal" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-base font-bold text-green-700" placeholder="0.00">
+                            <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5">إجمالي القيمة الكلية للفاتورة (ج.م)</label>
+                            <input type="number" step="0.01" id="billTotal" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-base font-bold text-green-700 dark:text-green-400" placeholder="0.00">
                         </div>
                         
-                        <div class="border-t border-gray-100 pt-4 bg-gray-50 p-4 rounded-xl">
-                            <label class="block text-sm font-bold text-gray-700 mb-3 flex items-center space-x-1.5 space-x-reverse">
-                                <i class="fa-solid fa-arrows-split-up-and-left text-green-600"></i>
+                        <div class="border-t border-gray-100 dark:border-gray-700 pt-4 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl">
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-3 flex items-center space-x-1.5 space-x-reverse">
+                                <i class="fa-solid fa-arrows-split-up-and-left text-green-600 dark:text-green-400"></i>
                                 <span>توزيع الحساب وقيمة مشتريات كل شخص:</span>
                             </label>
                             <div id="billDistributionContainer" class="space-y-3 max-h-60 overflow-y-auto pr-1">
-                                </div>
+                                <!-- يظهر هنا حقول الأشخاص تلقائياً -->
+                            </div>
                         </div>
 
                         <button type="submit" class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg transition transform active:scale-95 text-sm flex items-center justify-center space-x-2 space-x-reverse">
@@ -158,23 +185,25 @@
                 </div>
             </div>
 
+            <!-- 📄 الصفحة الثالثة: فلاتر الاستعلام والتقارير الشهريّة والسنويّة -->
             <div id="page_reportsPage" class="app-page hidden space-y-8">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <!-- قسم الفلترة واختيار التاريخ -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row md:items-center md:justify-between gap-4 transition-colors">
                     <div>
-                        <h3 class="text-xl font-bold text-gray-800 flex items-center space-x-2 space-x-reverse">
-                            <i class="fa-solid fa-chart-pie text-green-600"></i>
+                        <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center space-x-2 space-x-reverse">
+                            <i class="fa-solid fa-chart-pie text-green-600 dark:text-green-400"></i>
                             <span>تقارير المشتريات والاستعلام المفصل</span>
                         </h3>
-                        <p class="text-xs text-gray-500 mt-1">اختر السنة والشهر لتجميع الحسابات وحساب المتأخرات بناءً على قواعد الـ 55 يوماً.</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">اختر السنة والشهر لتجميع الحسابات وحساب المتأخرات بناءً على قواعد الـ 55 يوماً.</p>
                     </div>
                     <div class="flex space-x-2 space-x-reverse self-end md:self-center">
-                        <select id="filterYear" class="px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm font-semibold bg-gray-50">
+                        <select id="filterYear" class="px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm font-semibold bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white">
+                            <option value="2027">2027</option>
                             <option value="2026">2026</option>
                             <option value="2025">2025</option>
                             <option value="2024">2024</option>
-                            <option value="2023">2023</option>
                         </select>
-                        <select id="filterMonth" class="px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm font-semibold bg-gray-50">
+                        <select id="filterMonth" class="px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm font-semibold bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white">
                             <option value="all">تجميعي شامل (كل الشهور)</option>
                             <option value="01">يناير (01)</option>
                             <option value="02">فبراير (02)</option>
@@ -192,17 +221,20 @@
                     </div>
                 </div>
 
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <h4 class="text-sm font-bold text-gray-700 mb-4">📊 إجمالي مستحقات ومشتريات الأشخاص للنطاق المحدد:</h4>
+                <!-- بطاقات تلخيص مستحقات الأشخاص -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
+                    <h4 class="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4">📊 إجمالي مستحقات ومشتريات الأشخاص للنطاق المحدد:</h4>
                     <div id="monthlySummaryContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        </div>
+                        <!-- تظهر الكروت ديناميكياً -->
+                    </div>
                 </div>
 
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <h4 class="text-sm font-bold text-gray-700 mb-4">📑 كشف تفصيلي بالفواتير المدرجة في البحث:</h4>
-                    <div class="overflow-x-auto rounded-xl border border-gray-200">
-                        <table class="min-w-full divide-y divide-gray-200 text-sm text-right">
-                            <thead class="bg-gray-50 text-gray-700 font-semibold">
+                <!-- جدول الفواتير التفصيلي -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
+                    <h4 class="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4">📑 كشف تفصيلي بالفواتير المدرجة في البحث:</h4>
+                    <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm text-right">
+                            <thead class="bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold">
                                 <tr>
                                     <th class="px-4 py-3">التاريخ والوقت</th>
                                     <th class="px-4 py-3">المكان / المتجر</th>
@@ -211,26 +243,28 @@
                                     <th class="px-4 py-3 text-center">إجراءات</th>
                                 </tr>
                             </thead>
-                            <tbody id="billsTableBody" class="divide-y divide-gray-200 bg-white">
-                                </tbody>
+                            <tbody id="billsTableBody" class="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
+                                <!-- تظهر الصفوف هنا -->
+                            </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
+            <!-- 📄 الصفحة الرابعة: دفتر السداد البنكي والترحيل بعد 55 يوم -->
             <div id="paymentsPage" class="app-page hidden space-y-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <div class="border-b border-gray-100 pb-4 mb-6">
-                        <h3 class="text-xl font-bold text-gray-800 flex items-center space-x-2 space-x-reverse">
-                            <i class="fa-solid fa-cash-register text-emerald-600"></i>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
+                    <div class="border-b border-gray-100 dark:border-gray-700 pb-4 mb-6">
+                        <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center space-x-2 space-x-reverse">
+                            <i class="fa-solid fa-cash-register text-emerald-600 dark:text-emerald-400"></i>
                             <span>دفتر السداد ومتابعة مهلة الـ 55 يوماً البنكية</span>
                         </h3>
-                        <p class="text-xs text-gray-500 mt-1">تنبيه ذكي يحسب الأيام المتبقية قبل انتهاء سماح الشهر الحالي، لتفادي ترحيل المبالغ غير المسددة كمتأخرات إجبارية.</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">تنبيه ذكي يحسب الأيام المتبقية قبل انتهاء سماح الشهر الحالي، لتفادي ترحيل المبالغ غير المسددة كمتأخرات إجبارية.</p>
                     </div>
 
-                    <div class="overflow-x-auto rounded-xl border border-gray-200">
-                        <table class="min-w-full divide-y divide-gray-200 text-sm text-right">
-                            <thead class="bg-emerald-50 text-emerald-900 font-semibold">
+                    <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm text-right">
+                            <thead class="bg-emerald-50 dark:bg-emerald-950/50 text-emerald-900 dark:text-emerald-300 font-semibold">
                                 <tr>
                                     <th class="px-4 py-3">اسم الشخص</th>
                                     <th class="px-4 py-3">المطالبة المالية الكلية</th>
@@ -239,8 +273,9 @@
                                     <th class="px-4 py-3 text-center">تسجيل حركة دفع</th>
                                 </tr>
                             </thead>
-                            <tbody id="paymentsTableBody" class="divide-y divide-gray-200 bg-white">
-                                </tbody>
+                            <tbody id="paymentsTableBody" class="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
+                                <!-- يظهر هنا كشف السداد البنكي -->
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -249,6 +284,7 @@
         </main>
     </div>
 
+    <!-- Firebase SDK Script Modules -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -300,6 +336,29 @@
         const monthlySummaryContainer = document.getElementById("monthlySummaryContainer");
         const billsTableBody = document.getElementById("billsTableBody");
         const paymentsTableBody = document.getElementById("paymentsTableBody");
+        const themeToggleBtn = document.getElementById("themeToggleBtn");
+        const themeToggleIcon = document.getElementById("themeToggleIcon");
+
+        // إعداد الوضع الليلي / المضيء وتذكره في المتصفح
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            themeToggleIcon.className = "fa-solid fa-sun";
+        } else {
+            document.documentElement.classList.remove('dark');
+            themeToggleIcon.className = "fa-solid fa-moon";
+        }
+
+        themeToggleBtn.addEventListener("click", () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                themeToggleIcon.className = "fa-solid fa-moon";
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                themeToggleIcon.className = "fa-solid fa-sun";
+            }
+        });
 
         // ضبط التواريخ التلقائية لليوم الحالي
         const today = new Date();
@@ -311,15 +370,12 @@
 
         // دالة التنقل والتبديل بين الصفحات وعزلها بالكامل
         window.switchPage = function(pageId) {
-            // إخفاء كافة الصفحات
             document.querySelectorAll('.app-page').forEach(page => page.classList.add('hidden'));
-            // إظهار الصفحة المختارة
             const targetedPage = document.getElementById('page_' + pageId) || document.getElementById(pageId);
             if(targetedPage) targetedPage.classList.remove('hidden');
 
-            // تعديل شكل الأزرار لتوضيح الشاشة النشطة حالياً
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.className = "tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center space-x-2 space-x-reverse text-gray-600 hover:bg-gray-100";
+                btn.className = "tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center space-x-2 space-x-reverse text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700";
             });
             const activeTab = document.getElementById('tab_' + pageId);
             if(activeTab) {
@@ -376,7 +432,7 @@
 
         logoutBtn.addEventListener("click", () => signOut(auth));
 
-        // جلب البيانات الحية بلحظة من قاعدة البيانات للـ 3 مجموعات
+        // جلب البيانات الحية بلحظة من قاعدة البيانات
         function initRealtimeListeners() {
             const friendsRef = collection(db, "users", currentUser.uid, "friends");
             onSnapshot(friendsRef, (snapshot) => {
@@ -428,10 +484,10 @@
             }
             globalFriends.forEach(friend => {
                 const badge = document.createElement("div");
-                badge.className = "bg-gray-100 text-gray-800 text-xs px-3 py-2 rounded-xl font-semibold flex items-center space-x-2 space-x-reverse shadow-sm border border-gray-200";
+                badge.className = "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs px-3 py-2 rounded-xl font-semibold flex items-center space-x-2 space-x-reverse shadow-sm border border-gray-200 dark:border-gray-600";
                 badge.innerHTML = `
                     <span>${friend.name}</span>
-                    <button onclick="deleteFriend('${friend.id}')" class="text-red-500 hover:text-red-700 font-bold"><i class="fa-solid fa-trash-can"></i></button>
+                    <button onclick="deleteFriend('${friend.id}')" class="text-red-500 hover:text-red-700 dark:text-red-400 font-bold"><i class="fa-solid fa-trash-can"></i></button>
                 `;
                 friendsList.appendChild(badge);
             });
@@ -445,17 +501,17 @@
 
         function renderDistributionInputs() {
             if (globalFriends.length === 0) {
-                billDistributionContainer.innerHTML = `<p class="text-xs text-amber-600 bg-amber-50 p-2 rounded-lg">يرجى إضافة أشخاص أولاً من شاشة إدارة الأشخاص ليتم توزيع الحساب عليهم.</p>`;
+                billDistributionContainer.innerHTML = `<p class="text-xs text-amber-600 bg-amber-50 dark:bg-amber-950/20 p-2 rounded-lg">يرجى إضافة أشخاص أولاً من شاشة إدارة الأشخاص ليتم توزيع الحساب عليهم.</p>`;
                 return;
             }
             billDistributionContainer.innerHTML = "";
             globalFriends.forEach(friend => {
                 const row = document.createElement("div");
-                row.className = "flex items-center justify-between bg-white p-2.5 rounded-xl border border-gray-200 shadow-sm";
+                row.className = "flex items-center justify-between bg-white dark:bg-gray-800 p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm";
                 row.innerHTML = `
-                    <span class="text-xs font-bold text-gray-700">${friend.name}</span>
+                    <span class="text-xs font-bold text-gray-700 dark:text-gray-300">${friend.name}</span>
                     <div class="flex items-center space-x-2 space-x-reverse">
-                        <input type="number" step="0.01" data-friend-id="${friend.id}" class="friend-share-input w-28 px-2 py-1 text-xs border border-gray-300 rounded-lg text-left font-bold text-gray-800 focus:ring-2 focus:ring-green-500 focus:outline-none" placeholder="0.00">
+                        <input type="number" step="0.01" data-friend-id="${friend.id}" class="friend-share-input w-28 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-lg text-left font-bold text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-green-500 focus:outline-none" placeholder="0.00">
                         <span class="text-xs text-gray-400">ج.م</span>
                     </div>
                 `;
@@ -480,13 +536,13 @@
                 const fId = input.getAttribute("data-friend-id");
                 const val = parseFloat(input.value) || 0;
                 if (val > 0) {
-                    distribution[fId] = val;
+                    distribution[fId] = val; // حفظ القيمة كـ رقم صريح
                     summedShares += val;
                 }
             });
 
-            if(summedShares > total + 0.1) {
-                return alert(`مجموع حصص الأشخاص (${summedShares} ج.م) يتخطى إجمالي قيمة الفاتورة الكلي (${total} ج.م) ! يرجى المراجعة.`);
+            if(summedShares > total + 0.5) {
+                return alert(`مجموع حصص الأشخاص (${summedShares.toFixed(2)} ج.م) يتخطى إجمالي قيمة الفاتورة الكلي (${total.toFixed(2)} ج.م) ! يرجى المراجعة.`);
             }
 
             try {
@@ -497,7 +553,7 @@
                 billDate.value = today.toISOString().split('T')[0];
                 billTime.value = today.toTimeString().split(' ')[0].substring(0, 5);
                 renderDistributionInputs();
-                alert("تم حفظ الفاتورة وتوزيع المبالغ بنجاح! يمكنك مراجعة التقارير من شاشتها المخصصة.");
+                alert("تم حفظ الفاتورة بنجاح وظهرت في التقارير والسداد!");
             } catch (error) {
                 alert("خطأ أثناء حفظ الفاتورة: " + error.message);
             }
@@ -512,15 +568,18 @@
         filterYear.addEventListener("change", calculateAndRenderReports);
         filterMonth.addEventListener("change", calculateAndRenderReports);
 
-        // المحرك الحسابي التراكمي ونظام مهلة الـ 55 يوماً
+        // المحرك الحسابي التراكمي ونظام مهلة الـ 55 يوماً الفوري التزامن
         function calculateAndRenderReports() {
             const selYear = filterYear.value;
             const selMonth = filterMonth.value;
 
             const filteredBills = globalBills.filter(bill => {
                 if (!bill.date) return false;
-                const bYear = bill.date.substring(0, 4);
-                const bMonth = bill.date.substring(5, 7);
+                const parts = bill.date.split('-');
+                if(parts.length < 2) return false;
+                const bYear = parts[0];
+                const bMonth = parts[1];
+                
                 if (bYear !== selYear) return false;
                 if (selMonth !== "all" && bMonth !== selMonth) return false;
                 return true;
@@ -532,7 +591,7 @@
                 if (bill.distribution) {
                     Object.keys(bill.distribution).forEach(fId => {
                         if (monthlyShares[fId] !== undefined) {
-                            monthlyShares[fId] += bill.distribution[fId];
+                            monthlyShares[fId] += parseFloat(bill.distribution[fId]) || 0;
                         }
                     });
                 }
@@ -544,7 +603,7 @@
             });
 
             const monthsList = [];
-            for (let y = 2023; y <= 2026; y++) {
+            for (let y = 2024; y <= 2027; y++) {
                 for (let m = 1; m <= 12; m++) {
                     monthsList.push({ year: String(y), month: String(m).padStart(2, '0') });
                 }
@@ -565,15 +624,18 @@
 
                     let loopShares = 0;
                     globalBills.forEach(bill => {
-                        if (bill.date && bill.date.substring(0, 4) === cYear && bill.date.substring(5, 7) === cMonth) {
-                            if (bill.distribution && bill.distribution[f.id]) {
-                                loopShares += bill.distribution[f.id];
+                        if (bill.date) {
+                            const parts = bill.date.split('-');
+                            if(parts[0] === cYear && parts[1] === cMonth) {
+                                if (bill.distribution && bill.distribution[f.id]) {
+                                    loopShares += parseFloat(bill.distribution[f.id]) || 0;
+                                }
                             }
                         }
                     });
 
                     const pKey = `${f.id}_${cYear}_${cMonth}`;
-                    const paidAmount = (globalPayments[pKey] && globalPayments[pKey].amount !== undefined) ? globalPayments[pKey].amount : 0;
+                    const paidAmount = (globalPayments[pKey] && globalPayments[pKey].amount !== undefined) ? parseFloat(globalPayments[pKey].amount) : 0;
 
                     let loopNetRequired = (loopShares + trackingArrears) - trackingCredit;
                     if (loopNetRequired < 0) {
@@ -618,7 +680,7 @@
         function renderBillsTable(bills) {
             billsTableBody.innerHTML = "";
             if (bills.length === 0) {
-                billsTableBody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-gray-500 text-xs">لا توجد فواتير مسجلة في هذا النطاق الزمني للبحث.</td></tr>`;
+                billsTableBody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-gray-500 dark:text-gray-400 text-xs">لا توجد فواتير مسجلة في هذا النطاق الزمني للبحث.</td></tr>`;
                 return;
             }
             bills.forEach(bill => {
@@ -626,18 +688,19 @@
                 if (bill.distribution) {
                     Object.keys(bill.distribution).forEach(fId => {
                         const f = globalFriends.find(x => x.id === fId);
-                        distText.push(`${f ? f.name : "مجهول"}: ${bill.distribution[fId].toFixed(2)} ج.م`);
+                        const val = parseFloat(bill.distribution[fId]) || 0;
+                        distText.push(`${f ? f.name : "مجهول"}: ${val.toFixed(2)} ج.م`);
                     });
                 }
                 const row = document.createElement("tr");
-                row.className = "hover:bg-gray-50 transition border-b";
+                row.className = "hover:bg-gray-50 dark:hover:bg-gray-700/50 transition border-b dark:border-gray-700";
                 row.innerHTML = `
-                    <td class="px-4 py-3.5 text-xs font-medium text-gray-600 whitespace-nowrap">${bill.date} | ${bill.time}</td>
-                    <td class="px-4 py-3.5 text-xs font-bold text-gray-800">${bill.location}</td>
-                    <td class="px-4 py-3.5 text-xs font-extrabold text-green-700 whitespace-nowrap">${bill.total.toFixed(2)} ج.م</td>
-                    <td class="px-4 py-3.5 text-xs text-gray-600 font-medium">${distText.join(" ، ")}</td>
+                    <td class="px-4 py-3.5 text-xs font-medium text-gray-600 dark:text-gray-400 whitespace-nowrap">${bill.date} | ${bill.time}</td>
+                    <td class="px-4 py-3.5 text-xs font-bold text-gray-800 dark:text-white">${bill.location}</td>
+                    <td class="px-4 py-3.5 text-xs font-extrabold text-green-700 dark:text-green-400 whitespace-nowrap">${parseFloat(bill.total).toFixed(2)} ج.م</td>
+                    <td class="px-4 py-3.5 text-xs text-gray-600 dark:text-gray-300 font-medium">${distText.join(" ، ")}</td>
                     <td class="px-4 py-3.5 text-center whitespace-nowrap">
-                        <button onclick="deleteBill('${bill.id}')" class="text-red-500 hover:text-red-700 p-1 transition text-xs font-bold"><i class="fa-solid fa-trash-can"></i> حذف</button>
+                        <button onclick="deleteBill('${bill.id}')" class="text-red-500 hover:text-red-700 dark:text-red-400 p-1 transition text-xs font-bold"><i class="fa-solid fa-trash-can"></i> حذف</button>
                     </td>
                 `;
                 billsTableBody.appendChild(row);
@@ -647,7 +710,7 @@
         function renderMonthlySummary(shares, balances) {
             monthlySummaryContainer.innerHTML = "";
             if(globalFriends.length === 0) {
-                monthlySummaryContainer.innerHTML = `<p class="text-xs text-gray-400">برجاء إدخال شركاء أولاً لمتابعة ملخصاتهم الممالية.</p>`;
+                monthlySummaryContainer.innerHTML = `<p class="text-xs text-gray-400">برجاء إدخال شركاء أولاً لمتابعة ملخصاتهم المالية.</p>`;
                 return;
             }
             globalFriends.forEach(friend => {
@@ -657,16 +720,16 @@
                 const net = (purchase + arr) - crd;
 
                 const card = document.createElement("div");
-                card.className = "bg-white p-4 rounded-xl border border-gray-200 flex flex-col justify-between shadow-sm hover:border-green-300 transition";
+                card.className = "bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 flex flex-col justify-between shadow-sm hover:border-green-300 dark:hover:border-green-600 transition";
                 card.innerHTML = `
-                    <div class="flex items-center justify-between border-b border-gray-100 pb-2 mb-3">
-                        <span class="font-bold text-gray-800 text-sm"><i class="fa-solid fa-circle-user text-gray-400 ml-1"></i>${friend.name}</span>
-                        <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-xl border border-emerald-200">صافي المطلوب: ${net > 0 ? net.toFixed(2) : 0.00} ج.م</span>
+                    <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-700 pb-2 mb-3">
+                        <span class="font-bold text-gray-800 dark:text-white text-sm"><i class="fa-solid fa-circle-user text-gray-400 ml-1"></i>${friend.name}</span>
+                        <span class="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-xl border border-emerald-200 dark:border-emerald-800">صافي المطلوب: ${net > 0 ? net.toFixed(2) : '0.00'} ج.م</span>
                     </div>
-                    <div class="grid grid-cols-3 gap-1.5 text-[10px] text-gray-500 text-center">
-                        <div class="bg-gray-50 p-1.5 rounded-lg border">مشتريات النطاق: <b class="text-gray-800 block font-bold mt-0.5">${purchase.toFixed(2)}</b></div>
-                        <div class="bg-gray-50 p-1.5 rounded-lg border">متأخرات (>55 يوم): <b class="text-red-600 block font-bold mt-0.5">${arr.toFixed(2)}</b></div>
-                        <div class="bg-gray-50 p-1.5 rounded-lg border">فائض مرحل: <b class="text-blue-600 block font-bold mt-0.5">${crd.toFixed(2)}</b></div>
+                    <div class="grid grid-cols-3 gap-1.5 text-[10px] text-gray-500 dark:text-gray-400 text-center">
+                        <div class="bg-gray-50 dark:bg-gray-700/50 p-1.5 rounded-lg border dark:border-gray-600">مشتريات النطاق: <b class="text-gray-800 dark:text-white block font-bold mt-0.5">${purchase.toFixed(2)}</b></div>
+                        <div class="bg-gray-50 dark:bg-gray-700/50 p-1.5 rounded-lg border dark:border-gray-600">متأخرات (>55 يوم): <b class="text-red-600 dark:text-red-400 block font-bold mt-0.5">${arr.toFixed(2)}</b></div>
+                        <div class="bg-gray-50 dark:bg-gray-700/50 p-1.5 rounded-lg border dark:border-gray-600">فائض مرحل: <b class="text-blue-600 dark:text-blue-400 block font-bold mt-0.5">${crd.toFixed(2)}</b></div>
                     </div>
                 `;
                 monthlySummaryContainer.appendChild(card);
@@ -676,7 +739,7 @@
         function renderPaymentsPanel(shares, balances, year, month) {
             paymentsTableBody.innerHTML = "";
             if (globalFriends.length === 0 || month === "all") {
-                paymentsTableBody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-gray-500 text-xs font-semibold">يرجى تحديد "شهر محدد" (وليس خيار تجميعي شامل) من صفحة التقارير لعرض ومتابعة فترات السماح وعمليات السداد هنا.</td></tr>`;
+                paymentsTableBody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-gray-500 dark:text-gray-400 text-xs font-semibold">يرجى تحديد "شهر محدد" (وليس خيار تجميعي شامل) من صفحة التقارير لعرض ومتابعة فترات السماح وعمليات السداد هنا.</td></tr>`;
                 return;
             }
 
@@ -693,44 +756,44 @@
                 const totalRequired = (purchase + prevArrears) - prevCredit;
                 
                 const pKey = `${friend.id}_${year}_${month}`;
-                const currentPaid = (globalPayments[pKey] && globalPayments[pKey].amount !== undefined) ? globalPayments[pKey].amount : 0;
+                const currentPaid = (globalPayments[pKey] && globalPayments[pKey].amount !== undefined) ? parseFloat(globalPayments[pKey].amount) : 0;
 
                 let statusBadge = "";
                 let statusCalculationsText = "";
 
                 if (currentPaid === 0 && totalRequired <= 0) {
-                    statusBadge = `<span class="bg-blue-50 text-blue-700 px-2.5 py-1 rounded-xl text-xs font-bold border border-blue-200">مغطى بالكامل</span>`;
+                    statusBadge = `<span class="bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 px-2.5 py-1 rounded-xl text-xs font-bold border border-blue-200 dark:border-blue-800">مغطى بالكامل</span>`;
                     statusCalculationsText = `<p class="text-[10px] text-gray-400 mt-1">الحساب مستقر بفعل أرصدة دائنة سابقة.</p>`;
-                } else if (currentPaid > 0 && Math.abs(currentPaid - totalRequired) < 0.02) {
-                    statusBadge = `<span class="bg-green-100 text-green-800 px-2.5 py-1 rounded-xl text-xs font-bold border border-green-300">تم السداد بالكامل ✅</span>`;
-                    statusCalculationsText = `<p class="text-[10px] text-green-600 mt-1">تمت التسوية بنجاح داخل فترة السماح.</p>`;
+                } else if (currentPaid > 0 && Math.abs(currentPaid - totalRequired) < 0.1) {
+                    statusBadge = `<span class="bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400 px-2.5 py-1 rounded-xl text-xs font-bold border border-green-300 dark:border-green-800">تم السداد بالكامل ✅</span>`;
+                    statusCalculationsText = `<p class="text-[10px] text-green-600 dark:text-green-400 mt-1">تمت التسوية بنجاح داخل فترة السماح.</p>`;
                 } else if (currentPaid > 0 && currentPaid < totalRequired) {
                     const rem = totalRequired - currentPaid;
-                    statusBadge = `<span class="bg-amber-100 text-amber-800 px-2.5 py-1 rounded-xl text-xs font-bold border border-amber-300">سداد جزئي</span>`;
-                    statusCalculationsText = `<p class="text-[10px] text-amber-600 mt-1">المتبقي: ${rem.toFixed(2)} ج.م. ينتهي سماحه خلال ${daysLeftInGrace > 0 ? daysLeftInGrace : 0} يوم.</p>`;
+                    statusBadge = `<span class="bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-400 px-2.5 py-1 rounded-xl text-xs font-bold border border-amber-300 dark:border-amber-800">سداد جزئي</span>`;
+                    statusCalculationsText = `<p class="text-[10px] text-amber-600 dark:text-amber-400 mt-1">المتبقي: ${rem.toFixed(2)} ج.م. ينتهي سماحه خلال ${daysLeftInGrace > 0 ? daysLeftInGrace : 0} يوم.</p>`;
                 } else if (currentPaid > totalRequired) {
                     const surplus = currentPaid - totalRequired;
-                    statusBadge = `<span class="bg-purple-100 text-purple-800 px-2.5 py-1 rounded-xl text-xs font-bold border border-purple-300">فائض دائن</span>`;
-                    statusCalculationsText = `<p class="text-[10px] text-purple-600 mt-1">زيادة بقيمة ${surplus.toFixed(2)} ج.م ستدور كخصومات للشهور التالية.</p>`;
+                    statusBadge = `<span class="bg-purple-100 dark:bg-purple-950/40 text-purple-800 dark:text-purple-400 px-2.5 py-1 rounded-xl text-xs font-bold border border-purple-300 dark:border-purple-800">فائض دائن</span>`;
+                    statusCalculationsText = `<p class="text-[10px] text-purple-600 dark:text-purple-400 mt-1">زيادة بقيمة ${surplus.toFixed(2)} ج.م ستدور كخصومات للشهور التالية.</p>`;
                 } else {
                     if (daysLeftInGrace > 0) {
-                        statusBadge = `<span class="bg-sky-100 text-sky-800 px-2.5 py-1 rounded-xl text-xs font-bold border border-sky-300">داخل فترة السماح ⏱️</span>`;
-                        statusCalculationsText = `<p class="text-[10px] text-sky-600 mt-1">متبقي ${daysLeftInGrace} يوم على انتهاء المهلة البنكية قبل ترحيل الحساب.</p>`;
+                        statusBadge = `<span class="bg-sky-100 dark:bg-sky-950/40 text-sky-800 dark:text-sky-400 px-2.5 py-1 rounded-xl text-xs font-bold border border-sky-300 dark:border-sky-800">داخل فترة السماح ⏱️</span>`;
+                        statusCalculationsText = `<p class="text-[10px] text-sky-600 dark:text-sky-400 mt-1">متبقي ${daysLeftInGrace} يوم على انتهاء المهلة البنكية.</p>`;
                     } else {
-                        statusBadge = `<span class="bg-red-100 text-red-800 px-2.5 py-1 rounded-xl text-xs font-bold border border-red-300">انتهت المهلة ❌</span>`;
-                        statusCalculationsText = `<p class="text-[10px] text-red-500 mt-1">تخطى الـ 55 يوماً، وسيُرحل كمتأخرات فورية للشهر التالي.</p>`;
+                        statusBadge = `<span class="bg-red-100 dark:bg-red-950/40 text-red-800 dark:text-red-400 px-2.5 py-1 rounded-xl text-xs font-bold border border-red-300 dark:border-red-800">انتهت المهلة ❌</span>`;
+                        statusCalculationsText = `<p class="text-[10px] text-red-500 dark:text-red-400 mt-1">تخطى الـ 55 يوماً، وسيُرحل كمتأخرات فورية للشهر التالي.</p>`;
                     }
                 }
 
                 const row = document.createElement("tr");
-                row.className = "hover:bg-gray-50 transition border-b";
+                row.className = "hover:bg-gray-50 dark:hover:bg-gray-700/50 transition border-b dark:border-gray-700";
                 row.innerHTML = `
-                    <td class="px-4 py-3.5 text-xs font-bold text-gray-800">${friend.name}</td>
-                    <td class="px-4 py-3.5 text-xs text-gray-600 font-semibold">
-                        <span class="text-green-700 font-bold">${totalRequired > 0 ? totalRequired.toFixed(2) : 0.00} ج.م</span>
+                    <td class="px-4 py-3.5 text-xs font-bold text-gray-800 dark:text-white">${friend.name}</td>
+                    <td class="px-4 py-3.5 text-xs text-gray-600 dark:text-gray-300 font-semibold">
+                        <span class="text-green-700 dark:text-green-400 font-bold">${totalRequired > 0 ? totalRequired.toFixed(2) : '0.00'} ج.م</span>
                         <div class="text-[9px] text-gray-400 font-normal mt-0.5">(مشتريات: ${purchase.toFixed(2)} + متأخرات: ${prevArrears.toFixed(2)} - دائن: ${prevCredit.toFixed(2)})</div>
                     </td>
-                    <td class="px-4 py-3.5 text-xs font-bold text-emerald-700 whitespace-nowrap">
+                    <td class="px-4 py-3.5 text-xs font-bold text-emerald-700 dark:text-emerald-400 whitespace-nowrap">
                         <i class="fa-solid fa-money-bill-wave text-emerald-500 ml-1"></i> ${currentPaid.toFixed(2)} ج.م
                     </td>
                     <td class="px-4 py-3.5 text-xs">
@@ -739,7 +802,7 @@
                     </td>
                     <td class="px-4 py-3.5 text-center whitespace-nowrap">
                         <div class="flex items-center justify-center space-x-1.5 space-x-reverse">
-                            <input type="number" step="0.01" id="input_pay_${friend.id}" class="w-24 px-2 py-1.5 text-xs border border-gray-300 rounded-lg font-bold text-left focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="${totalRequired > 0 ? totalRequired.toFixed(2) : '0.00'}">
+                            <input type="number" step="0.01" id="input_pay_${friend.id}" class="w-24 px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded-lg font-bold text-left bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="${totalRequired > 0 ? totalRequired.toFixed(2) : '0.00'}">
                             <button onclick="savePaymentAction('${friend.id}', '${year}', '${month}')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-1"><i class="fa-solid fa-floppy-disk"></i> <span>حفظ</span></button>
                         </div>
                     </td>

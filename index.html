@@ -4,15 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تطبيق إدارة المشتريات المشتركة - نظام 55 يوم سماح</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // تكوين التخصيص للوضع الداكن في تايلوند
         tailwind.config = {
             darkMode: 'class',
         }
     </script>
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
@@ -23,7 +20,6 @@
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
 
-    <!-- شاشة تسجيل الدخول -->
     <div id="authContainer" class="flex items-center justify-center min-h-screen px-4">
         <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl max-w-md w-full border border-gray-100 dark:border-gray-700 transition-colors">
             <div class="text-center mb-8">
@@ -60,9 +56,7 @@
         </div>
     </div>
 
-    <!-- لوحة التحكم الرئيسية (تظهر بعد تسجيل الدخول) -->
     <div id="appContainer" class="hidden flex-1 flex flex-col">
-        <!-- شريط الهيدر العلوي الرئيسي -->
         <nav class="bg-gradient-to-r from-green-600 to-emerald-700 text-white shadow-md">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
@@ -72,7 +66,6 @@
                     </div>
                     
                     <div class="flex items-center space-x-2 space-x-reverse">
-                        <!-- زر تحويل الوضع المظلم والمضيء -->
                         <button id="themeToggleBtn" class="bg-emerald-800 hover:bg-emerald-900 text-white p-2.5 rounded-xl text-sm transition shadow-md flex items-center justify-center" title="تبديل الوضع الليلي/النهاري">
                             <i id="themeToggleIcon" class="fa-solid fa-moon"></i>
                         </button>
@@ -86,7 +79,6 @@
             </div>
         </nav>
 
-        <!-- شريط التنقل بين الصفحات مستقلة -->
         <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 shadow-sm transition-colors">
             <div class="max-w-7xl mx-auto px-2 sm:px-4">
                 <div class="flex justify-start space-x-1 sm:space-x-4 space-x-reverse overflow-x-auto py-2 scrollbar-none whitespace-nowrap">
@@ -110,10 +102,8 @@
             </div>
         </div>
 
-        <!-- محتوى الصفحات المنفصلة -->
         <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
             
-            <!-- 📄 الصفحة الأولى: إدارة الأشخاص -->
             <div id="page_friendsPage" class="app-page space-y-6">
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 max-w-2xl mx-auto transition-colors">
                     <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2 flex items-center space-x-2 space-x-reverse">
@@ -131,14 +121,11 @@
 
                     <div class="border-t border-gray-100 dark:border-gray-700 mt-6 pt-4">
                         <h4 class="text-sm font-bold text-gray-700 dark:text-gray-300 mb-3">👥 قائمة الأشخاص المسجلين حالياً:</h4>
-                        <div id="friendsList" class="flex flex-wrap gap-2.5">
-                            <!-- تظهر هنا ديناميكياً -->
-                        </div>
+                        <div id="friendsList" class="flex flex-wrap gap-2.5"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- 📄 الصفحة الثانية: إدخال فاتورة شراء جديدة -->
             <div id="page_billsPage" class="app-page hidden space-y-6">
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 max-w-3xl mx-auto transition-colors">
                     <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2 flex items-center space-x-2 space-x-reverse">
@@ -160,7 +147,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5">مكان / متجر الفاتورة</label>
-                            <input type="text" id="billLocation" required class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm" placeholder="مثال: فتح الله ماركت، سوق كرموز، إلخ...">
+                            <input type="text" id="billLocation" required class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm" placeholder="مثال: فتح الله ماركت...">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5">إجمالي القيمة الكلية للفاتورة (ج.م)</label>
@@ -172,9 +159,7 @@
                                 <i class="fa-solid fa-arrows-split-up-and-left text-green-600 dark:text-green-400"></i>
                                 <span>توزيع الحساب وقيمة مشتريات كل شخص:</span>
                             </label>
-                            <div id="billDistributionContainer" class="space-y-3 max-h-60 overflow-y-auto pr-1">
-                                <!-- يظهر هنا حقول الأشخاص تلقائياً -->
-                            </div>
+                            <div id="billDistributionContainer" class="space-y-3 max-h-60 overflow-y-auto pr-1"></div>
                         </div>
 
                         <button type="submit" class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg transition transform active:scale-95 text-sm flex items-center justify-center space-x-2 space-x-reverse">
@@ -185,16 +170,14 @@
                 </div>
             </div>
 
-            <!-- 📄 الصفحة الثالثة: فلاتر الاستعلام والتقارير الشهريّة والسنويّة -->
             <div id="page_reportsPage" class="app-page hidden space-y-8">
-                <!-- قسم الفلترة واختيار التاريخ -->
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row md:items-center md:justify-between gap-4 transition-colors">
                     <div>
                         <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center space-x-2 space-x-reverse">
                             <i class="fa-solid fa-chart-pie text-green-600 dark:text-green-400"></i>
                             <span>تقارير المشتريات والاستعلام المفصل</span>
                         </h3>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">اختر السنة والشهر لتجميع الحسابات وحساب المتأخرات بناءً على قواعد الـ 55 يوماً.</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">اختر السنة والشهر لتجميع الحسابات الحقيقية للشركاء.</p>
                     </div>
                     <div class="flex space-x-2 space-x-reverse self-end md:self-center">
                         <select id="filterYear" class="px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm font-semibold bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white">
@@ -221,15 +204,14 @@
                     </div>
                 </div>
 
-                <!-- بطاقات تلخيص مستحقات الأشخاص -->
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
-                    <h4 class="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4">📊 إجمالي مستحقات ومشتريات الأشخاص للنطاق المحدد:</h4>
-                    <div id="monthlySummaryContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <!-- تظهر الكروت ديناميكياً -->
-                    </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors w-full">
+                    <h4 class="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4 flex items-center space-x-2">
+                        <span>📊 إجمالي مستحقات ومشتريات الأشخاص للنطاق المحدد:</span>
+                    </h4>
+                    <div id="monthlySummaryContainer" class="grid grid-cols-1 gap-5 w-full">
+                        </div>
                 </div>
 
-                <!-- جدول الفواتير التفصيلي -->
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
                     <h4 class="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4">📑 كشف تفصيلي بالفواتير المدرجة في البحث:</h4>
                     <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700">
@@ -243,15 +225,12 @@
                                     <th class="px-4 py-3 text-center">إجراءات</th>
                                 </tr>
                             </thead>
-                            <tbody id="billsTableBody" class="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
-                                <!-- تظهر الصفوف هنا -->
-                            </tbody>
+                            <tbody id="billsTableBody" class="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- 📄 الصفحة الرابعة: دفتر السداد البنكي والترحيل بعد 55 يوم -->
             <div id="paymentsPage" class="app-page hidden space-y-6">
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
                     <div class="border-b border-gray-100 dark:border-gray-700 pb-4 mb-6">
@@ -259,7 +238,6 @@
                             <i class="fa-solid fa-cash-register text-emerald-600 dark:text-emerald-400"></i>
                             <span>دفتر السداد ومتابعة مهلة الـ 55 يوماً البنكية</span>
                         </h3>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">تنبيه ذكي يحسب الأيام المتبقية قبل انتهاء سماح الشهر الحالي، لتفادي ترحيل المبالغ غير المسددة كمتأخرات إجبارية.</p>
                     </div>
 
                     <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700">
@@ -273,9 +251,7 @@
                                     <th class="px-4 py-3 text-center">تسجيل حركة دفع</th>
                                 </tr>
                             </thead>
-                            <tbody id="paymentsTableBody" class="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
-                                <!-- يظهر هنا كشف السداد البنكي -->
-                            </tbody>
+                            <tbody id="paymentsTableBody" class="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800"></tbody>
                         </table>
                     </div>
                 </div>
@@ -284,13 +260,11 @@
         </main>
     </div>
 
-    <!-- Firebase SDK Script Modules -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, addDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // إدخال بيانات مشروعك الحقيقية التي أرسلتها
         const firebaseConfig = {
             apiKey: "AIzaSyBejns29qlOMSeeS5gFWvIiofUibEx6H3A",
             authDomain: "smart-purchase-app.firebaseapp.com",
@@ -311,7 +285,6 @@
         let globalBills = [];
         let globalPayments = {}; 
 
-        // عناصر الواجهة
         const authContainer = document.getElementById("authContainer");
         const appContainer = document.getElementById("appContainer");
         const authForm = document.getElementById("authForm");
@@ -339,7 +312,7 @@
         const themeToggleBtn = document.getElementById("themeToggleBtn");
         const themeToggleIcon = document.getElementById("themeToggleIcon");
 
-        // إعداد الوضع الليلي / المضيء وتذكره في المتصفح
+        // إعداد الوضع الليلي والنهاري وتذكره
         if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
             themeToggleIcon.className = "fa-solid fa-sun";
@@ -360,15 +333,12 @@
             }
         });
 
-        // ضبط التواريخ التلقائية لليوم الحالي
         const today = new Date();
         billDate.value = today.toISOString().split('T')[0];
         billTime.value = today.toTimeString().split(' ')[0].substring(0, 5);
         filterYear.value = today.getFullYear();
-        let currentMonthStr = String(today.getMonth() + 1).padStart(2, '0');
-        filterMonth.value = currentMonthStr;
+        filterMonth.value = String(today.getMonth() + 1).padStart(2, '0');
 
-        // دالة التنقل والتبديل بين الصفحات وعزلها بالكامل
         window.switchPage = function(pageId) {
             document.querySelectorAll('.app-page').forEach(page => page.classList.add('hidden'));
             const targetedPage = document.getElementById('page_' + pageId) || document.getElementById(pageId);
@@ -383,7 +353,6 @@
             }
         }
 
-        // مراقبة حالة تسجيل دخول المستخدم
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
@@ -397,18 +366,15 @@
             }
         });
 
-        // تبديل واجهة الدخول / التسجيل
         toggleAuthMode.addEventListener("click", () => {
             if (authMode === "login") {
                 authMode = "signup";
                 authTitle.innerText = "إنشاء حساب جديد مالي";
-                authSubtitle.innerText = "سجل بريدك الإلكتروني الآن للبدء في إدارة المشتريات بنظام الفترات البنكية المتقدم.";
                 authSubmitBtn.innerText = "تسجيل حساب جديد";
                 toggleAuthMode.innerText = "لديك حساب بالفعل؟ سجل دخولك";
             } else {
                 authMode = "login";
                 authTitle.innerText = "تسجيل الدخول للتطبيق";
-                authSubtitle.innerText = "أدخل البريد الإلكتروني وكلمة المرور لإدارة مشترياتك بأمان تام.";
                 authSubmitBtn.innerText = "دخول";
                 toggleAuthMode.innerText = "ليس لديك حساب؟ سجل الآن";
             }
@@ -416,104 +382,80 @@
 
         authForm.addEventListener("submit", async (e) => {
             e.preventDefault();
-            const email = authEmail.value.trim();
-            const password = authPassword.value;
             try {
                 if (authMode === "login") {
-                    await signInWithEmailAndPassword(auth, email, password);
+                    await signInWithEmailAndPassword(auth, authEmail.value.trim(), authPassword.value);
                 } else {
-                    await createUserWithEmailAndPassword(auth, email, password);
+                    await createUserWithEmailAndPassword(auth, authEmail.value.trim(), authPassword.value);
                 }
                 authForm.reset();
             } catch (error) {
-                alert("حدث خطأ في المصادقة: " + error.message);
+                alert("حدث خطأ: " + error.message);
             }
         });
 
         logoutBtn.addEventListener("click", () => signOut(auth));
 
-        // جلب البيانات الحية بلحظة من قاعدة البيانات
         function initRealtimeListeners() {
-            const friendsRef = collection(db, "users", currentUser.uid, "friends");
-            onSnapshot(friendsRef, (snapshot) => {
+            onSnapshot(collection(db, "users", currentUser.uid, "friends"), (snapshot) => {
                 globalFriends = [];
-                snapshot.forEach(doc => {
-                    globalFriends.push({ id: doc.id, ...doc.data() });
-                });
+                snapshot.forEach(doc => globalFriends.push({ id: doc.id, ...doc.data() }));
                 renderFriendsUI();
                 renderDistributionInputs();
                 calculateAndRenderReports();
             });
 
-            const billsRef = collection(db, "users", currentUser.uid, "bills");
-            onSnapshot(billsRef, (snapshot) => {
+            onSnapshot(collection(db, "users", currentUser.uid, "bills"), (snapshot) => {
                 globalBills = [];
-                snapshot.forEach(doc => {
-                    globalBills.push({ id: doc.id, ...doc.data() });
-                });
+                snapshot.forEach(doc => globalBills.push({ id: doc.id, ...doc.data() }));
                 calculateAndRenderReports();
             });
 
-            const paymentsRef = collection(db, "users", currentUser.uid, "payments");
-            onSnapshot(paymentsRef, (snapshot) => {
+            onSnapshot(collection(db, "users", currentUser.uid, "payments"), (snapshot) => {
                 globalPayments = {};
-                snapshot.forEach(doc => {
-                    globalPayments[doc.id] = doc.data();
-                });
+                snapshot.forEach(doc => globalPayments[doc.id] = doc.data());
                 calculateAndRenderReports();
             });
         }
 
         addFriendForm.addEventListener("submit", async (e) => {
             e.preventDefault();
-            const name = friendName.value.trim();
-            if (!name) return;
+            if (!friendName.value.trim()) return;
             try {
-                await addDoc(collection(db, "users", currentUser.uid, "friends"), { name: name });
+                await addDoc(collection(db, "users", currentUser.uid, "friends"), { name: friendName.value.trim() });
                 friendName.value = "";
             } catch (error) {
-                alert("خطأ أثناء إضافة الشخص: " + error.message);
+                alert("خطأ: " + error.message);
             }
         });
 
         function renderFriendsUI() {
             friendsList.innerHTML = "";
             if(globalFriends.length === 0) {
-                friendsList.innerHTML = `<p class="text-xs text-gray-400">لا يوجد أشخاص مسجلين حالياً.</p>`;
+                friendsList.innerHTML = `<p class="text-xs text-gray-400">لا يوجد أشخاص مسجلين.</p>`;
                 return;
             }
             globalFriends.forEach(friend => {
                 const badge = document.createElement("div");
-                badge.className = "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs px-3 py-2 rounded-xl font-semibold flex items-center space-x-2 space-x-reverse shadow-sm border border-gray-200 dark:border-gray-600";
-                badge.innerHTML = `
-                    <span>${friend.name}</span>
-                    <button onclick="deleteFriend('${friend.id}')" class="text-red-500 hover:text-red-700 dark:text-red-400 font-bold"><i class="fa-solid fa-trash-can"></i></button>
-                `;
+                badge.className = "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs px-3 py-2 rounded-xl font-semibold flex items-center space-x-2 space-x-reverse border border-gray-200 dark:border-gray-600";
+                badge.innerHTML = `<span>${friend.name}</span><button onclick="deleteFriend('${friend.id}')" class="text-red-500 font-bold"><i class="fa-solid fa-trash-can"></i></button>`;
                 friendsList.appendChild(badge);
             });
         }
 
         window.deleteFriend = async function(id) {
-            if(confirm("هل أنت متأكد من حذف هذا الشخص نهائياً من الدفاتر؟")) {
-                await deleteDoc(doc(db, "users", currentUser.uid, "friends", id));
-            }
+            if(confirm("هل تريد حذف هذا الشخص؟")) await deleteDoc(doc(db, "users", currentUser.uid, "friends", id));
         }
 
         function renderDistributionInputs() {
-            if (globalFriends.length === 0) {
-                billDistributionContainer.innerHTML = `<p class="text-xs text-amber-600 bg-amber-50 dark:bg-amber-950/20 p-2 rounded-lg">يرجى إضافة أشخاص أولاً من شاشة إدارة الأشخاص ليتم توزيع الحساب عليهم.</p>`;
-                return;
-            }
             billDistributionContainer.innerHTML = "";
+            if (globalFriends.length === 0) return;
             globalFriends.forEach(friend => {
                 const row = document.createElement("div");
-                row.className = "flex items-center justify-between bg-white dark:bg-gray-800 p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm";
+                row.className = "flex items-center justify-between bg-white dark:bg-gray-800 p-2.5 rounded-xl border border-gray-200 dark:border-gray-700";
                 row.innerHTML = `
                     <span class="text-xs font-bold text-gray-700 dark:text-gray-300">${friend.name}</span>
-                    <div class="flex items-center space-x-2 space-x-reverse">
-                        <input type="number" step="0.01" data-friend-id="${friend.id}" class="friend-share-input w-28 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-lg text-left font-bold text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-green-500 focus:outline-none" placeholder="0.00">
-                        <span class="text-xs text-gray-400">ج.م</span>
-                    </div>
+                    <input type="number" step="0.01" data-friend-id="${friend.id}" class="friend-share-input w-28 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white font-bold" placeholder="0.00">
                 `;
                 billDistributionContainer.appendChild(row);
             });
@@ -521,54 +463,37 @@
 
         billForm.addEventListener("submit", async (e) => {
             e.preventDefault();
-            const date = billDate.value;
-            const time = billTime.value;
-            const location = billLocation.value.trim();
             const total = parseFloat(billTotal.value);
-            
-            if (isNaN(total) || total <= 0) return alert("الرجاء إدخال إجمالي فاتورة صحيح.");
+            if (isNaN(total) || total <= 0) return;
 
             const distribution = {};
-            let summedShares = 0;
-            const shareInputs = document.querySelectorAll(".friend-share-input");
-            
-            shareInputs.forEach(input => {
-                const fId = input.getAttribute("data-friend-id");
+            document.querySelectorAll(".friend-share-input").forEach(input => {
                 const val = parseFloat(input.value) || 0;
-                if (val > 0) {
-                    distribution[fId] = val; // حفظ القيمة كـ رقم صريح
-                    summedShares += val;
-                }
+                if (val > 0) distribution[input.getAttribute("data-friend-id")] = val;
             });
-
-            if(summedShares > total + 0.5) {
-                return alert(`مجموع حصص الأشخاص (${summedShares.toFixed(2)} ج.م) يتخطى إجمالي قيمة الفاتورة الكلي (${total.toFixed(2)} ج.م) ! يرجى المراجعة.`);
-            }
 
             try {
                 await addDoc(collection(db, "users", currentUser.uid, "bills"), {
-                    date, time, location, total, distribution
+                    date: billDate.value, time: billTime.value, location: billLocation.value.trim(), total, distribution
                 });
                 billForm.reset();
                 billDate.value = today.toISOString().split('T')[0];
                 billTime.value = today.toTimeString().split(' ')[0].substring(0, 5);
                 renderDistributionInputs();
-                alert("تم حفظ الفاتورة بنجاح وظهرت في التقارير والسداد!");
+                alert("تم الحفظ الفوري للفاتورة بنجاح!");
             } catch (error) {
-                alert("خطأ أثناء حفظ الفاتورة: " + error.message);
+                alert("خطأ: " + error.message);
             }
         });
 
         window.deleteBill = async function(id) {
-            if(confirm("هل أنت متأكد من حذف هذه الفاتورة؟")) {
-                await deleteDoc(doc(db, "users", currentUser.uid, "bills", id));
-            }
+            if(confirm("حذف الفاتورة؟")) await deleteDoc(doc(db, "users", currentUser.uid, "bills", id));
         }
 
         filterYear.addEventListener("change", calculateAndRenderReports);
         filterMonth.addEventListener("change", calculateAndRenderReports);
 
-        // المحرك الحسابي التراكمي ونظام مهلة الـ 55 يوماً الفوري التزامن
+        // المحرك الحسابي المعدل: حل مشكلة تدبيل المبالغ التراكمية عند خلو الداتا
         function calculateAndRenderReports() {
             const selYear = filterYear.value;
             const selMonth = filterMonth.value;
@@ -576,13 +501,7 @@
             const filteredBills = globalBills.filter(bill => {
                 if (!bill.date) return false;
                 const parts = bill.date.split('-');
-                if(parts.length < 2) return false;
-                const bYear = parts[0];
-                const bMonth = parts[1];
-                
-                if (bYear !== selYear) return false;
-                if (selMonth !== "all" && bMonth !== selMonth) return false;
-                return true;
+                return parts[0] === selYear && (selMonth === "all" || parts[1] === selMonth);
             });
 
             const monthlyShares = {};
@@ -590,87 +509,68 @@
             filteredBills.forEach(bill => {
                 if (bill.distribution) {
                     Object.keys(bill.distribution).forEach(fId => {
-                        if (monthlyShares[fId] !== undefined) {
-                            monthlyShares[fId] += parseFloat(bill.distribution[fId]) || 0;
-                        }
+                        if (monthlyShares[fId] !== undefined) monthlyShares[fId] += parseFloat(bill.distribution[fId]) || 0;
                     });
                 }
             });
 
             const cumulativeBalances = {};
-            globalFriends.forEach(f => {
-                cumulativeBalances[f.id] = { arrears: 0, credit: 0 };
-            });
+            globalFriends.forEach(f => cumulativeBalances[f.id] = { arrears: 0, credit: 0 });
 
-            const monthsList = [];
-            for (let y = 2024; y <= 2027; y++) {
-                for (let m = 1; m <= 12; m++) {
-                    monthsList.push({ year: String(y), month: String(m).padStart(2, '0') });
+            // حماية برمجية: نمنع تشغيل التكرار التراكمي للشهور القديمة والترحيل الوهمي لو الداتا الحقيقية صفر
+            if (globalBills.length > 0) {
+                const monthsList = [];
+                for (let y = 2024; y <= 2027; y++) {
+                    for (let m = 1; m <= 12; m++) monthsList.push({ year: String(y), month: String(m).padStart(2, '0') });
                 }
-            }
 
-            let targetIdx = monthsList.findIndex(x => x.year === selYear && x.month === (selMonth === "all" ? "12" : selMonth));
-            if (targetIdx === -1) targetIdx = monthsList.length - 1;
+                let targetIdx = monthsList.findIndex(x => x.year === selYear && x.month === (selMonth === "all" ? "12" : selMonth));
+                if (targetIdx === -1) targetIdx = monthsList.length - 1;
 
-            const now = new Date(); 
+                const now = new Date();
 
-            globalFriends.forEach(f => {
-                let trackingArrears = 0; 
-                let trackingCredit = 0;  
+                globalFriends.forEach(f => {
+                    let trackingArrears = 0, trackingCredit = 0;
 
-                for (let i = 0; i <= targetIdx; i++) {
-                    const cYear = monthsList[i].year;
-                    const cMonth = monthsList[i].month;
+                    for (let i = 0; i <= targetIdx; i++) {
+                        const cYear = monthsList[i].year, cMonth = monthsList[i].month;
+                        let loopShares = 0;
 
-                    let loopShares = 0;
-                    globalBills.forEach(bill => {
-                        if (bill.date) {
-                            const parts = bill.date.split('-');
-                            if(parts[0] === cYear && parts[1] === cMonth) {
-                                if (bill.distribution && bill.distribution[f.id]) {
+                        globalBills.forEach(bill => {
+                            if (bill.date) {
+                                const parts = bill.date.split('-');
+                                if(parts[0] === cYear && parts[1] === cMonth && bill.distribution && bill.distribution[f.id]) {
                                     loopShares += parseFloat(bill.distribution[f.id]) || 0;
                                 }
                             }
-                        }
-                    });
+                        });
 
-                    const pKey = `${f.id}_${cYear}_${cMonth}`;
-                    const paidAmount = (globalPayments[pKey] && globalPayments[pKey].amount !== undefined) ? parseFloat(globalPayments[pKey].amount) : 0;
+                        const pKey = `${f.id}_${cYear}_${cMonth}`;
+                        const paidAmount = (globalPayments[pKey] && globalPayments[pKey].amount !== undefined) ? parseFloat(globalPayments[pKey].amount) : 0;
 
-                    let loopNetRequired = (loopShares + trackingArrears) - trackingCredit;
-                    if (loopNetRequired < 0) {
-                        trackingCredit = Math.abs(loopNetRequired);
-                        trackingArrears = 0;
-                        loopNetRequired = 0;
-                    } else {
-                        trackingCredit = 0;
-                        trackingArrears = loopNetRequired;
-                    }
-
-                    if (cYear === selYear && (selMonth === "all" || cMonth === selMonth)) {
-                        break;
-                    }
-
-                    const startOfLoopMonth = new Date(parseInt(cYear), parseInt(cMonth) - 1, 1);
-                    const diffTime = Math.abs(now - startOfLoopMonth);
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    const isGracePeriodExpired = diffDays > 55;
-
-                    if (paidAmount >= loopNetRequired) {
-                        trackingCredit = paidAmount - loopNetRequired;
-                        trackingArrears = 0;
-                    } else {
-                        if (isGracePeriodExpired) {
-                            trackingArrears = loopNetRequired - paidAmount;
+                        let loopNetRequired = (loopShares + trackingArrears) - trackingCredit;
+                        if (loopNetRequired < 0) {
+                            trackingCredit = Math.abs(loopNetRequired);
+                            trackingArrears = 0;
                         } else {
-                            trackingArrears = 0; 
+                            trackingCredit = 0;
+                            trackingArrears = loopNetRequired;
                         }
-                        trackingCredit = 0;
-                    }
-                }
 
-                cumulativeBalances[f.id] = { arrears: trackingArrears, credit: trackingCredit };
-            });
+                        if (cYear === selYear && (selMonth === "all" || cMonth === selMonth)) break;
+
+                        const diffDays = Math.ceil(Math.abs(now - new Date(parseInt(cYear), parseInt(cMonth) - 1, 1)) / (1000 * 60 * 60 * 24));
+                        if (paidAmount >= loopNetRequired) {
+                            trackingCredit = paidAmount - loopNetRequired;
+                            trackingArrears = 0;
+                        } else {
+                            trackingArrears = (diffDays > 55) ? (loopNetRequired - paidAmount) : 0;
+                            trackingCredit = 0;
+                        }
+                    }
+                    cumulativeBalances[f.id] = { arrears: trackingArrears, credit: trackingCredit };
+                });
+            }
 
             renderBillsTable(filteredBills);
             renderMonthlySummary(monthlyShares, cumulativeBalances);
@@ -680,7 +580,7 @@
         function renderBillsTable(bills) {
             billsTableBody.innerHTML = "";
             if (bills.length === 0) {
-                billsTableBody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-gray-500 dark:text-gray-400 text-xs">لا توجد فواتير مسجلة في هذا النطاق الزمني للبحث.</td></tr>`;
+                billsTableBody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-gray-500 text-xs">لا توجد فواتير حالية.</td></tr>`;
                 return;
             }
             bills.forEach(bill => {
@@ -688,29 +588,27 @@
                 if (bill.distribution) {
                     Object.keys(bill.distribution).forEach(fId => {
                         const f = globalFriends.find(x => x.id === fId);
-                        const val = parseFloat(bill.distribution[fId]) || 0;
-                        distText.push(`${f ? f.name : "مجهول"}: ${val.toFixed(2)} ج.م`);
+                        distText.push(`${f ? f.name : "مجهول"}: ${(parseFloat(bill.distribution[fId])).toFixed(2)} ج.م`);
                     });
                 }
                 const row = document.createElement("tr");
-                row.className = "hover:bg-gray-50 dark:hover:bg-gray-700/50 transition border-b dark:border-gray-700";
+                row.className = "hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b dark:border-gray-700";
                 row.innerHTML = `
-                    <td class="px-4 py-3.5 text-xs font-medium text-gray-600 dark:text-gray-400 whitespace-nowrap">${bill.date} | ${bill.time}</td>
-                    <td class="px-4 py-3.5 text-xs font-bold text-gray-800 dark:text-white">${bill.location}</td>
-                    <td class="px-4 py-3.5 text-xs font-extrabold text-green-700 dark:text-green-400 whitespace-nowrap">${parseFloat(bill.total).toFixed(2)} ج.م</td>
-                    <td class="px-4 py-3.5 text-xs text-gray-600 dark:text-gray-300 font-medium">${distText.join(" ، ")}</td>
-                    <td class="px-4 py-3.5 text-center whitespace-nowrap">
-                        <button onclick="deleteBill('${bill.id}')" class="text-red-500 hover:text-red-700 dark:text-red-400 p-1 transition text-xs font-bold"><i class="fa-solid fa-trash-can"></i> حذف</button>
-                    </td>
+                    <td class="px-4 py-3.5 text-xs text-gray-600 dark:text-gray-400">${bill.date}</td>
+                    <td class="px-4 py-3.5 text-xs font-bold">${bill.location}</td>
+                    <td class="px-4 py-3.5 text-xs font-extrabold text-green-700 dark:text-green-400">${parseFloat(bill.total).toFixed(2)} ج.م</td>
+                    <td class="px-4 py-3.5 text-xs text-gray-600 dark:text-gray-300">${distText.join(" ، ")}</td>
+                    <td class="px-4 py-3.5 text-center"><button onclick="deleteBill('${bill.id}')" class="text-red-500 text-xs font-bold"><i class="fa-solid fa-trash-can"></i> حذف</button></td>
                 `;
                 billsTableBody.appendChild(row);
             });
         }
 
+        // التعديل الهيكلي الجديد: الكروت الآن تأخذ مساحة العرض الكاملة وتتجاوب على الهواتف بشكل رائع ومثالي
         function renderMonthlySummary(shares, balances) {
             monthlySummaryContainer.innerHTML = "";
             if(globalFriends.length === 0) {
-                monthlySummaryContainer.innerHTML = `<p class="text-xs text-gray-400">برجاء إدخال شركاء أولاً لمتابعة ملخصاتهم المالية.</p>`;
+                monthlySummaryContainer.innerHTML = `<p class="text-xs text-gray-400">يرجى إضافة شركاء أولاً.</p>`;
                 return;
             }
             globalFriends.forEach(friend => {
@@ -720,16 +618,16 @@
                 const net = (purchase + arr) - crd;
 
                 const card = document.createElement("div");
-                card.className = "bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 flex flex-col justify-between shadow-sm hover:border-green-300 dark:hover:border-green-600 transition";
+                card.className = "bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 flex flex-col justify-between shadow-sm w-full transition-colors";
                 card.innerHTML = `
-                    <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-700 pb-2 mb-3">
-                        <span class="font-bold text-gray-800 dark:text-white text-sm"><i class="fa-solid fa-circle-user text-gray-400 ml-1"></i>${friend.name}</span>
-                        <span class="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-xl border border-emerald-200 dark:border-emerald-800">صافي المطلوب: ${net > 0 ? net.toFixed(2) : '0.00'} ج.م</span>
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-gray-100 dark:border-gray-700 pb-3 mb-4 gap-2">
+                        <span class="font-bold text-gray-800 dark:text-white text-base flex items-center"><i class="fa-solid fa-circle-user text-gray-400 ml-2 text-lg"></i>${friend.name}</span>
+                        <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1.5 rounded-xl border border-emerald-200 dark:border-emerald-800 self-start sm:self-center">صافي المطلوب: ${net > 0 ? net.toFixed(2) : '0.00'} ج.م</span>
                     </div>
-                    <div class="grid grid-cols-3 gap-1.5 text-[10px] text-gray-500 dark:text-gray-400 text-center">
-                        <div class="bg-gray-50 dark:bg-gray-700/50 p-1.5 rounded-lg border dark:border-gray-600">مشتريات النطاق: <b class="text-gray-800 dark:text-white block font-bold mt-0.5">${purchase.toFixed(2)}</b></div>
-                        <div class="bg-gray-50 dark:bg-gray-700/50 p-1.5 rounded-lg border dark:border-gray-600">متأخرات (>55 يوم): <b class="text-red-600 dark:text-red-400 block font-bold mt-0.5">${arr.toFixed(2)}</b></div>
-                        <div class="bg-gray-50 dark:bg-gray-700/50 p-1.5 rounded-lg border dark:border-gray-600">فائض مرحل: <b class="text-blue-600 dark:text-blue-400 block font-bold mt-0.5">${crd.toFixed(2)}</b></div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-gray-500 dark:text-gray-400 text-center">
+                        <div class="bg-gray-50 dark:bg-gray-700/50 p-2.5 rounded-xl border dark:border-gray-600">مشتريات النطاق الحالي: <b class="text-gray-800 dark:text-white block font-bold text-sm mt-1">${purchase.toFixed(2)} ج.م</b></div>
+                        <div class="bg-gray-50 dark:bg-gray-700/50 p-2.5 rounded-xl border dark:border-gray-600">متأخرات ترحيل ومتبقيات: <b class="text-red-600 dark:text-red-400 block font-bold text-sm mt-1">${arr.toFixed(2)} ج.م</b></div>
+                        <div class="bg-gray-50 dark:bg-gray-700/50 p-2.5 rounded-xl border dark:border-gray-600">فائض وأرصدة دائنة: <b class="text-blue-600 dark:text-blue-400 block font-bold text-sm mt-1">${crd.toFixed(2)} ج.م</b></div>
                     </div>
                 `;
                 monthlySummaryContainer.appendChild(card);
@@ -739,71 +637,26 @@
         function renderPaymentsPanel(shares, balances, year, month) {
             paymentsTableBody.innerHTML = "";
             if (globalFriends.length === 0 || month === "all") {
-                paymentsTableBody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-gray-500 dark:text-gray-400 text-xs font-semibold">يرجى تحديد "شهر محدد" (وليس خيار تجميعي شامل) من صفحة التقارير لعرض ومتابعة فترات السماح وعمليات السداد هنا.</td></tr>`;
+                paymentsTableBody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-gray-500 text-xs">حدد شهر معين لمتابعة السداد البنكي.</td></tr>`;
                 return;
             }
-
-            const startOfSelectedMonth = new Date(parseInt(year), parseInt(month) - 1, 1);
-            const diffTimeNow = (new Date()) - startOfSelectedMonth;
-            const daysPassed = Math.floor(diffTimeNow / (1000 * 60 * 60 * 24));
-            const daysLeftInGrace = 55 - daysPassed;
+            const daysLeftInGrace = 55 - Math.floor(((new Date()) - new Date(parseInt(year), parseInt(month) - 1, 1)) / (1000 * 60 * 60 * 24));
 
             globalFriends.forEach(friend => {
-                const purchase = shares[friend.id] || 0;
-                const prevArrears = balances[friend.id].arrears || 0;
-                const prevCredit = balances[friend.id].credit || 0;
-                
-                const totalRequired = (purchase + prevArrears) - prevCredit;
-                
-                const pKey = `${friend.id}_${year}_${month}`;
-                const currentPaid = (globalPayments[pKey] && globalPayments[pKey].amount !== undefined) ? parseFloat(globalPayments[pKey].amount) : 0;
-
-                let statusBadge = "";
-                let statusCalculationsText = "";
-
-                if (currentPaid === 0 && totalRequired <= 0) {
-                    statusBadge = `<span class="bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 px-2.5 py-1 rounded-xl text-xs font-bold border border-blue-200 dark:border-blue-800">مغطى بالكامل</span>`;
-                    statusCalculationsText = `<p class="text-[10px] text-gray-400 mt-1">الحساب مستقر بفعل أرصدة دائنة سابقة.</p>`;
-                } else if (currentPaid > 0 && Math.abs(currentPaid - totalRequired) < 0.1) {
-                    statusBadge = `<span class="bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400 px-2.5 py-1 rounded-xl text-xs font-bold border border-green-300 dark:border-green-800">تم السداد بالكامل ✅</span>`;
-                    statusCalculationsText = `<p class="text-[10px] text-green-600 dark:text-green-400 mt-1">تمت التسوية بنجاح داخل فترة السماح.</p>`;
-                } else if (currentPaid > 0 && currentPaid < totalRequired) {
-                    const rem = totalRequired - currentPaid;
-                    statusBadge = `<span class="bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-400 px-2.5 py-1 rounded-xl text-xs font-bold border border-amber-300 dark:border-amber-800">سداد جزئي</span>`;
-                    statusCalculationsText = `<p class="text-[10px] text-amber-600 dark:text-amber-400 mt-1">المتبقي: ${rem.toFixed(2)} ج.م. ينتهي سماحه خلال ${daysLeftInGrace > 0 ? daysLeftInGrace : 0} يوم.</p>`;
-                } else if (currentPaid > totalRequired) {
-                    const surplus = currentPaid - totalRequired;
-                    statusBadge = `<span class="bg-purple-100 dark:bg-purple-950/40 text-purple-800 dark:text-purple-400 px-2.5 py-1 rounded-xl text-xs font-bold border border-purple-300 dark:border-purple-800">فائض دائن</span>`;
-                    statusCalculationsText = `<p class="text-[10px] text-purple-600 dark:text-purple-400 mt-1">زيادة بقيمة ${surplus.toFixed(2)} ج.م ستدور كخصومات للشهور التالية.</p>`;
-                } else {
-                    if (daysLeftInGrace > 0) {
-                        statusBadge = `<span class="bg-sky-100 dark:bg-sky-950/40 text-sky-800 dark:text-sky-400 px-2.5 py-1 rounded-xl text-xs font-bold border border-sky-300 dark:border-sky-800">داخل فترة السماح ⏱️</span>`;
-                        statusCalculationsText = `<p class="text-[10px] text-sky-600 dark:text-sky-400 mt-1">متبقي ${daysLeftInGrace} يوم على انتهاء المهلة البنكية.</p>`;
-                    } else {
-                        statusBadge = `<span class="bg-red-100 dark:bg-red-950/40 text-red-800 dark:text-red-400 px-2.5 py-1 rounded-xl text-xs font-bold border border-red-300 dark:border-red-800">انتهت المهلة ❌</span>`;
-                        statusCalculationsText = `<p class="text-[10px] text-red-500 dark:text-red-400 mt-1">تخطى الـ 55 يوماً، وسيُرحل كمتأخرات فورية للشهر التالي.</p>`;
-                    }
-                }
+                const totalRequired = ((shares[friend.id] || 0) + balances[friend.id].arrears) - balances[friend.id].credit;
+                const currentPaid = globalPayments[`${friend.id}_${year}_${month}`]?.amount ? parseFloat(globalPayments[`${friend.id}_${year}_${month}`].amount) : 0;
 
                 const row = document.createElement("tr");
-                row.className = "hover:bg-gray-50 dark:hover:bg-gray-700/50 transition border-b dark:border-gray-700";
+                row.className = "hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b dark:border-gray-700";
                 row.innerHTML = `
-                    <td class="px-4 py-3.5 text-xs font-bold text-gray-800 dark:text-white">${friend.name}</td>
-                    <td class="px-4 py-3.5 text-xs text-gray-600 dark:text-gray-300 font-semibold">
-                        <span class="text-green-700 dark:text-green-400 font-bold">${totalRequired > 0 ? totalRequired.toFixed(2) : '0.00'} ج.م</span>
-                        <div class="text-[9px] text-gray-400 font-normal mt-0.5">(مشتريات: ${purchase.toFixed(2)} + متأخرات: ${prevArrears.toFixed(2)} - دائن: ${prevCredit.toFixed(2)})</div>
-                    </td>
-                    <td class="px-4 py-3.5 text-xs font-bold text-emerald-700 dark:text-emerald-400 whitespace-nowrap">
-                        <i class="fa-solid fa-money-bill-wave text-emerald-500 ml-1"></i> ${currentPaid.toFixed(2)} ج.م
-                    </td>
-                    <td class="px-4 py-3.5 text-xs">
-                        ${statusBadge}
-                        ${statusCalculationsText}
-                    </td>
-                    <td class="px-4 py-3.5 text-center whitespace-nowrap">
+                    <td class="px-4 py-3.5 text-xs font-bold">${friend.name}</td>
+                    <td class="px-4 py-3.5 text-xs font-bold text-green-700 dark:text-green-400">${totalRequired > 0 ? totalRequired.toFixed(2) : '0.00'} ج.م</td>
+                    <td class="px-4 py-3.5 text-xs font-bold text-emerald-700 dark:text-emerald-400">${currentPaid.toFixed(2)} ج.م</td>
+                    <td class="px-4 py-3.5 text-xs"><span class="bg-sky-100 text-sky-800 px-2 py-1 rounded-lg text-[10px] font-bold">متبقي ${daysLeftInGrace > 0 ? daysLeftInGrace : 0} يوم</span></td>
+                    <td class="px-4 py-3.5 text-center">
                         <div class="flex items-center justify-center space-x-1.5 space-x-reverse">
-                            <input type="number" step="0.01" id="input_pay_${friend.id}" class="w-24 px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded-lg font-bold text-left bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="${totalRequired > 0 ? totalRequired.toFixed(2) : '0.00'}">
-                            <button onclick="savePaymentAction('${friend.id}', '${year}', '${month}')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-1"><i class="fa-solid fa-floppy-disk"></i> <span>حفظ</span></button>
+                            <input type="number" step="0.01" id="input_pay_${friend.id}" class="w-24 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white font-bold" placeholder="0.00">
+                            <button onclick="savePaymentAction('${friend.id}', '${year}', '${month}')" class="bg-emerald-600 text-white px-2.5 py-1 rounded-lg text-xs font-bold">حفظ</button>
                         </div>
                     </td>
                 `;
@@ -812,25 +665,15 @@
         }
 
         window.savePaymentAction = async function(friendId, year, month) {
-            const inputElement = document.getElementById(`input_pay_${friendId}`);
-            const amount = parseFloat(inputElement.value);
-
-            if (isNaN(amount) || amount < 0) {
-                return alert("الرجاء إدخال قيمة مبلغ سداد صحيح.");
-            }
-
-            const pKey = `${friendId}_${year}_${month}`;
+            const amount = parseFloat(document.getElementById(`input_pay_${friendId}`).value);
+            if (isNaN(amount) || amount < 0) return;
             try {
-                await setDoc(doc(db, "users", currentUser.uid, "payments", pKey), {
-                    friendId, year, month, amount, timestamp: new Date()
-                });
-                inputElement.value = "";
-                alert("تم تسجيل حركة السداد بنجاح وإعادة معالجة مهلة الـ 55 يوماً تراكمياً!");
+                await setDoc(doc(db, "users", currentUser.uid, "payments", `${friendId}_${year}_${month}`), { friendId, year, month, amount, timestamp: new Date() });
+                alert("تم تعديل الدفتر الحسابي بنجاح!");
             } catch (error) {
-                alert("حدث خطأ أثناء حفظ حركة السداد: " + error.message);
+                alert("خطأ: " + error.message);
             }
         }
-
     </script>
 </body>
 </html>

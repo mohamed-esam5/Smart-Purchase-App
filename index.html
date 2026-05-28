@@ -244,7 +244,7 @@
                 </div>
             </div>
 
-            <!-- 📄 الصفحة الرابعة: دفتر السداد البنكي -->
+            <!-- 📄 الصفحة الرابعة: دفتر السداد البنكي المحدث بنظام الألوان الجديد -->
             <div id="paymentsPage" class="app-page hidden space-y-6">
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
                     <div class="border-b border-gray-100 dark:border-gray-700 pb-4 mb-6">
@@ -261,6 +261,7 @@
                                     <th class="px-4 py-3">اسم الشخص</th>
                                     <th class="px-4 py-3">المطالبة المالية الكلية</th>
                                     <th class="px-4 py-3">المبلغ المسدد بالفعل</th>
+                                    <th class="px-4 py-3 text-center">حالة المديونية الصافية</th>
                                     <th class="px-4 py-3">حالة المهلة والترحيل</th>
                                     <th class="px-4 py-3 text-center">تسجيل حركة دفع</th>
                                 </tr>
@@ -342,6 +343,7 @@
                 themeToggleIcon.className = "fa-solid fa-moon";
             } else {
                 document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
                 localStorage.setItem('theme', 'dark');
                 themeToggleIcon.className = "fa-solid fa-sun";
             }
@@ -507,12 +509,10 @@
         filterYear.addEventListener("change", calculateAndRenderReports);
         filterMonth.addEventListener("change", calculateAndRenderReports);
 
-        // 🧠 إصلاح المحرك الحسابي التراكمي لمنع الدبلرة بشكل نهائي وقاطع
         function calculateAndRenderReports() {
             const selYear = filterYear.value;
             const selMonth = filterMonth.value;
 
-            // 1. حساب مشتريات النطاق الحالي المختار فقط
             const filteredBills = globalBills.filter(bill => {
                 if (!bill.date) return false;
                 const parts = bill.date.split('-');
@@ -529,7 +529,6 @@
                 }
             });
 
-            // 2. حساب المتأخرات والفائض التراكمي (يقف تماماً عند الشهر السابق ولا يدخل فيه الشهر الحالي المختار من الفلتر)
             const cumulativeBalances = {};
             globalFriends.forEach(f => cumulativeBalances[f.id] = { arrears: 0, credit: 0 });
 
@@ -539,9 +538,8 @@
                     for (let m = 1; m <= 12; m++) monthsList.push({ year: String(y), month: String(m).padStart(2, '0') });
                 }
 
-                // نحدد الفهرس المستهدف ليكون الشهر السابق مباشرة للفلتر الحالي
                 let targetMonthIdx = monthsList.findIndex(x => x.year === selYear && x.month === selMonth);
-                let endHistoryIdx = targetMonthIdx - 1; // التوقف التام عند نهاية الشهر السابق لمنع الاحتساب المزدوج
+                let endHistoryIdx = targetMonthIdx - 1; 
 
                 if (endHistoryIdx >= 0) {
                     const now = new Date();
@@ -620,7 +618,6 @@
             });
         }
 
-        // 📱 تحسين هيكلي شامل: الصندوق والكروت ممتدة بالعرض الكامل وتتكيف 100% مع شاشات الجوال والكمبيوتر
         function renderMonthlySummary(shares, balances) {
             monthlySummaryContainer.innerHTML = "";
             if(globalFriends.length === 0) {
@@ -632,7 +629,6 @@
                 const arr = balances[friend.id].arrears || 0;
                 const crd = balances[friend.id].credit || 0;
                 
-                // الصافي السليم: المشتريات + المتأخرات الحقيقية القادمة من الماضي - الفائض
                 const net = (purchase + arr) - crd;
 
                 const card = document.createElement("div");
@@ -666,29 +662,44 @@
             });
         }
 
+        // 📊 تحديث جدول السداد لإدراج عمود الحالة الصافية بالألوان المطلوبة
         function renderPaymentsPanel(shares, balances, year, month) {
             paymentsTableBody.innerHTML = "";
             if (globalFriends.length === 0 || month === "all") {
-                paymentsTableBody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-gray-500 text-xs">حدد شهر معين لمتابعة السداد البنكي.</td></tr>`;
+                paymentsTableBody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-gray-500 text-xs">حدد شهر معين لمتابعة السداد البنكي.</td></tr>`;
                 return;
             }
             const daysLeftInGrace = 55 - Math.floor(((new Date()) - new Date(parseInt(year), parseInt(month) - 1, 1)) / (1000 * 60 * 60 * 24));
 
             globalFriends.forEach(friend => {
-                const totalRequired = ((shares[friend.id] || 0) + balances[friend.id].arrears) - balances[friend.id].credit;
+                const rawRequired = ((shares[friend.id] || 0) + balances[friend.id].arrears) - balances[friend.id].credit;
+                const totalRequired = rawRequired > 0 ? rawRequired : 0;
                 const currentPaid = globalPayments[`${friend.id}_${year}_${month}`]?.amount ? parseFloat(globalPayments[`${friend.id}_${year}_${month}`].amount) : 0;
+
+                // حساب المتبقي أو الفائض للحالة الصافية
+                let statusBadgeHTML = "";
+                const difference = currentPaid - totalRequired;
+
+                if (Math.abs(difference) < 0.01) {
+                    statusBadgeHTML = `<span class="bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 px-3 py-1.5 rounded-xl text-xs font-bold border border-emerald-200 dark:border-emerald-800"><i class="fa-solid fa-circle-check ml-1"></i>تم السداد بالكامل</span>`;
+                } else if (difference < 0) {
+                    statusBadgeHTML = `<span class="bg-red-100 dark:bg-red-950/60 text-red-800 dark:text-red-300 px-3 py-1.5 rounded-xl text-xs font-bold border border-red-200 dark:border-red-800"><i class="fa-solid fa-circle-exclamation ml-1"></i>متبقي: ${Math.abs(difference).toFixed(2)} ج.م</span>`;
+                } else {
+                    statusBadgeHTML = `<span class="bg-green-100 dark:bg-green-950/60 text-green-800 dark:text-green-300 px-3 py-1.5 rounded-xl text-xs font-bold border border-green-200 dark:border-green-800"><i class="fa-solid fa-piggy-bank ml-1"></i>فائض: ${difference.toFixed(2)} ج.م</span>`;
+                }
 
                 const row = document.createElement("tr");
                 row.className = "hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b dark:border-gray-700";
                 row.innerHTML = `
                     <td class="px-4 py-3.5 text-xs font-bold">${friend.name}</td>
-                    <td class="px-4 py-3.5 text-xs font-bold text-green-700 dark:text-green-400">${totalRequired > 0 ? totalRequired.toFixed(2) : '0.00'} ج.م</td>
+                    <td class="px-4 py-3.5 text-xs font-bold text-gray-700 dark:text-gray-300">${totalRequired.toFixed(2)} ج.م</td>
                     <td class="px-4 py-3.5 text-xs font-bold text-emerald-700 dark:text-emerald-400">${currentPaid.toFixed(2)} ج.م</td>
-                    <td class="px-4 py-3.5 text-xs"><span class="bg-sky-100 text-sky-800 px-2 py-1 rounded-lg text-[10px] font-bold">متبقي ${daysLeftInGrace > 0 ? daysLeftInGrace : 0} يوم</span></td>
+                    <td class="px-4 py-3.5 text-center">${statusBadgeHTML}</td>
+                    <td class="px-4 py-3.5 text-xs"><span class="bg-sky-100 dark:bg-sky-950/50 text-sky-800 dark:text-sky-300 px-2 py-1 rounded-lg text-[10px] font-bold">متبقي ${daysLeftInGrace > 0 ? daysLeftInGrace : 0} يوم</span></td>
                     <td class="px-4 py-3.5 text-center">
                         <div class="flex items-center justify-center space-x-1.5 space-x-reverse">
                             <input type="number" step="0.01" id="input_pay_${friend.id}" class="w-24 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white font-bold" placeholder="0.00">
-                            <button onclick="savePaymentAction('${friend.id}', '${year}', '${month}')" class="bg-emerald-600 text-white px-2.5 py-1 rounded-lg text-xs font-bold">حفظ</button>
+                            <button onclick="savePaymentAction('${friendId}', '${year}', '${month}')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg text-xs font-bold shadow-sm transition">حفظ</button>
                         </div>
                     </td>
                 `;

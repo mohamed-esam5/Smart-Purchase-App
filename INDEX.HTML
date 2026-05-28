@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق إدارة المشتريات المشتركة</title>
+    <!-- تضمين مكتبة Tailwind CSS للتصميم السريع والأنيق -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- تضمين مكتبات Firebase الأساسية -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    
+    <style>
+        body {
+            background-color: #0f172a; /* Dark Theme background */
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen p-4 md:p-8">
+
+    <!-- ================= 1. صفحة تسجيل الدخول والاشتراك ================= -->
+    <div id="auth-page" class="max-w-md mx-auto my-12 bg-slate-800 p-6 rounded-2xl shadow-xl border border-slate-700">
+        <h2 id="auth-title" class="text-2xl font-bold text-center mb-6 text-emerald-400">تسجيل الدخول للتطبيق</h2>
+        <p class="text-xs text-center text-slate-400 mb-6">أدخل البريد الإلكتروني وكلمة المرور لإدارة مشترياتك بأمان تام.</p>
+        
+        <form id="auth-form" onsubmit="handleAuth(event)">
+            <div class="mb-4">
+                <label class="block text-sm mb-2 text-slate-300">البريد الإلكتروني</label>
+                <input type="email" id="auth-email" required class="w-full bg-slate-900 border border-slate-700 p-2.5 rounded-lg text-white focus:outline-none focus:border-emerald-500">
+            </div>
+            <div class="mb-6">
+                <label class="block text-sm mb-2 text-slate-300">كلمة المرور</label>
+                <input type="password" id="auth-password" required class="w-full bg-slate-900 border border-slate-700 p-2.5 rounded-lg text-white focus:outline-none focus:border-emerald-500">
+            </div>
+            <button type="submit" id="auth-btn" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold p-3 rounded-lg transition-all">دخول</button>
+        </form>
+        
+        <div class="text-center mt-6">
+            <button onclick="toggleAuthMode()" id="toggle-auth-btn" class="text-sm text-emerald-400 hover:underline">ليس لديك حساب؟ سجل الآن</button>
+        </div>
+    </div>
+
+    <!-- ================= 2. لوحة التحكم الرئيسية (تظهر بعد الدخول) ================= -->
+    <div id="main-app" class="max-w-6xl mx-auto hidden">
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8 bg-slate-800 p-4 rounded-xl border border-slate-700 gap-4">
+            <h1 class="text-xl font-bold text-emerald-400">لوحة التحكم والمشتريات</h1>
+            <div class="flex items-center gap-4">
+                <span id="user-display" class="text-sm text-slate-300"></span>
+                <button onclick="logout()" class="bg-rose-600 hover:bg-rose-700 text-white text-xs px-3 py-1.5 rounded-lg transition-all">خروج</button>
+            </div>
+        </header>
+
+        <!-- أزرار التنقل بين التبويبات -->
+        <nav class="flex gap-2 mb-6 overflow-x-auto pb-2">
+            <button onclick="switchTab('bills-tab')" class="tab-btn bg-emerald-500 text-slate-950 font-semibold px-4 py-2 rounded-lg transition-all">إدخال الفواتير</button>
+            <button onclick="switchTab('friends-tab')" class="tab-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2 rounded-lg transition-all">إدارة الأشخاص</button>
+            <button onclick="switchTab('reports-tab')" class="tab-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2 rounded-lg transition-all">التقارير والفلاتر المشتركة</button>
+        </nav>
+
+        <!-- تبويب 1: إدارة الأشخاص -->
+        <div id="friends-tab" class="tab-content bg-slate-800 p-6 rounded-xl border border-slate-700 mb-6">
+            <h3 class="text-lg font-bold mb-2 text-emerald-400">إضافة وتحديد الأشخاص الذين تتعامل معهم</h3>
+            <p class="text-sm text-slate-400 mb-4">قم بإدخال أسماء الأشخاص هنا أولاً لتظهر لك تلقائياً عند تقسيم أي فاتورة جديدة.</p>
+            <div class="flex gap-2 max-w-md mb-6">
+                <input type="text" id="friend-name" placeholder="اسم الشخص" class="flex-1 bg-slate-900 border border-slate-700 p-2.5 rounded-lg text-white focus:outline-none focus:border-emerald-500">
+                <button onclick="addFriend()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-6 rounded-lg transition-all">إضافة شخص</button>
+            </div>
+            <ul id="friends-list" class="grid grid-cols-2 md:grid-cols-4 gap-3"></ul>
+        </div>
+
+        <!-- تبويب 2: إدخال الفواتير -->
+        <div id="bills-tab" class="tab-content active bg-slate-800 p-6 rounded-xl border border-slate-700 mb-6">
+            <h3 class="text-lg font-bold mb-2 text-emerald-400">إدخال فاتورة شراء جديدة</h3>
+            <p class="text-sm text-slate-400 mb-6">أدخل بيانات الفاتورة الأساسية، ثم حدد نصيب كل شخص من القائمة السفلية الذكية.</p>
+            
+            <form onsubmit="saveBill(event)" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm mb-1 text-slate-300">تاريخ الفاتورة</label>
+                        <input type="date" id="bill-date" required class="w-full bg-slate-900 border border-slate-700 p-2.5 rounded-lg text-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm mb-1 text-slate-300">وقت الفاتورة</label>
+                        <input type="time" id="bill-time" required class="w-full bg-slate-900 border border-slate-700 p-2.5 rounded-lg text-white">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm mb-1 text-slate-300">مكان / متجر الفاتورة</label>
+                        <input type="text" id="bill-location" placeholder="مثال: كارفور، المتجر المحلي" required class="w-full bg-slate-900 border border-slate-700 p-2.5 rounded-lg text-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm mb-1 text-slate-300">إجمالي قيمة الفاتورة</label>
+                        <input type="number" step="0.01" id="bill-total" placeholder="0.00" required class="w-full bg-slate-900 border border-slate-700 p-2.5 rounded-lg text-white">
+                    </div>
+                </div>
+
+                <!-- قائمة ديناميكية تظهر الأشخاص لإدخال مبالغهم -->
+                <div class="border-t border-slate-700 pt-4">
+                    <label class="block text-sm font-bold mb-3 text-emerald-400">تقسيم وتوزيع المبالغ على الأشخاص:</label>
+                    <div id="bill-shares-container" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- تظهر حقول الإدخال هنا برمجياً -->
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold p-3 rounded-lg transition-all mt-4">حفظ الفاتورة وتوزيع الحسابات</button>
+            </form>
+        </div>
+
+        <!-- تبويب 3: التقارير والفلاتر المتقدمة -->
+        <div id="reports-tab" class="tab-content bg-slate-800 p-6 rounded-xl border border-slate-700">
+            <h3 class="text-lg font-bold mb-2 text-emerald-400">فلاتر الاستعلام والتقارير الشهرية والسنوية</h3>
+            <p class="text-sm text-slate-400 mb-6">يمكنك تصفية وعرض فواتير آخر 3 سنوات وتجميع المشتريات الشهرية لكل شخص من يوم 1 إلى آخر يوم في الشهر.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div>
+                    <label class="block text-sm mb-1 text-slate-300">اختر السنة</label>
+                    <select id="filter-year" onchange="loadReportsData()" class="w-full bg-slate-900 border border-slate-700 p-2.5 rounded-lg text-white">
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm mb-1 text-slate-300">اختر الشهر</label>
+                    <select id="filter-month" onchange="loadReportsData()" class="w-full bg-slate-900 border border-slate-700 p-2.5 rounded-lg text-white">
+                        <option value="all">تجميعي (1 - 31)</option>
+                        <option value="01">يناير (01)</option>
+                        <option value="02">فبراير (02)</option>
+                        <option value="03">مارس (03)</option>
+                        <option value="04">أبريل (04)</option>
+                        <option value="05">مايو (05)</option>
+                        <option value="06">يونيو (06)</option>
+                        <option value="07">يوليو (07)</option>
+                        <option value="08">أغسطس (08)</option>
+                        <option value="09">سبتمبر (09)</option>
+                        <option value="10">أكتوبر (10)</option>
+                        <option value="11">نوفمبر (11)</option>
+                        <option value="12">ديسمبر (12)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- ملخص الحسابات للشهر المحدد -->
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mb-6">
+                <h4 class="font-bold text-sm text-slate-400 mb-3">📊 إجمالي مستحقات ومشتريات الأشخاص لهذا الشهر المحدد:</h4>
+                <div id="monthly-summary-list" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <!-- يملأ بالـ JS -->
+                </div>
+            </div>
+
+            <!-- جدول الفواتير -->
+            <div class="overflow-x-auto">
+                <h4 class="font-bold text-sm text-slate-400 mb-3">📑 سجل الفواتير المفصلة والخاضعة للفلاتر:</h4>
+                <table class="w-full text-right border-collapse text-sm">
+                    <thead>
+                        <tr class="border-b border-slate-700 text-slate-400">
+                            <th class="p-3 text-center">التاريخ والوقت</th>
+                            <th class="p-3">المكان</th>
+                            <th class="p-3">الإجمالي</th>
+                            <th class="p-3">توزيع الحسابات والمشتريات</th>
+                            <th class="p-3 text-center">إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bills-table-body">
+                        <!-- الفواتير تظهر هنا -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- =================== 3. الـ JavaScript المنطقي =================== -->
+    <!-- ========================================================== -->
+    <script>
+        // --- إعدادات ربط قواعد البيانات و Firebase ---
+        // ضع مفاتيح مشروع Firebase الخاص بك هنا ليعمل السيرفر فوراً وبكفاءة
+         const firebaseConfig = {
+    apiKey: "AIzaSyBejns29qlOMSeeS5gFWvIiofUibEx6H3A",
+    authDomain: "smart-purchase-app.firebaseapp.com",
+    projectId: "smart-purchase-app",
+    storageBucket: "smart-purchase-app.firebasestorage.app",
+    messagingSenderId: "106709053535",
+    appId: "1:106709053535:web:407bc73786bbfecb2cabea",
+    measurementId: "G-R8VNPGH0XJ"
+  };
+
+        // تهيئة الـ Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let currentUser = null;
+        let isSignUpMode = false;
+        let cachedFriends = [];
+
+        // المراقبة التلقائية لحالة المستخدم (تسجيل دخول / خروج)
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('auth-page').classList.add('hidden');
+                document.getElementById('main-app').classList.remove('hidden');
+                document.getElementById('user-display').innerText = `المستخدم: ${user.email}`;
+                
+                // تشغيل الأتمتة: مسح الفواتير الأقدم من 3 سنوات فور الدخول لحماية المساحة
+                runDataRetentionPolicy();
+                // تحميل البيانات الأساسية
+                loadFriends();
+                loadReportsData();
+            } else {
+                currentUser = null;
+                document.getElementById('auth-page').classList.remove('hidden');
+                document.getElementById('main-app').classList.add('hidden');
+            }
+        });
+
+        // إدارة واجهة الدخول / الاشتراك
+        function toggleAuthMode() {
+            isSignUpMode = !isSignUpMode;
+            document.getElementById('auth-title').innerText = isSignUpMode ? "إنشاء حساب جديد خاص بك" : "تسجيل الدخول للتطبيق";
+            document.getElementById('auth-btn').innerText = isSignUpMode ? "تسجيل حساب جديد" : "دخول";
+            document.getElementById('toggle-auth-btn').innerText = isSignUpMode ? "تمتلك حساباً بالفعل؟ سجل دخولك" : "ليس لديك حساب؟ سجل الآن";
+        }
+
+        function handleAuth(e) {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value;
+            const pass = document.getElementById('auth-password').value;
+
+            if (isSignUpMode) {
+                auth.createUserWithEmailAndPassword(email, pass)
+                    .catch(err => alert("خطأ في التسجيل: " + err.message));
+            } else {
+                auth.signInWithEmailAndPassword(email, pass)
+                    .catch(err => alert("خطأ في الدخول: " + err.message));
+            }
+        }
+
+        function logout() {
+            auth.signOut();
+        }
+
+        // التحكم في تبويبات التنقل
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-emerald-500', 'text-slate-950', 'font-semibold');
+                btn.classList.add('bg-slate-800', 'text-slate-300');
+            });
+
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.remove('bg-slate-800', 'text-slate-300');
+            event.target.classList.add('bg-emerald-500', 'text-slate-950', 'font-semibold');
+        }
+
+        // --- إدارة قسم الأشخاص المشتركين ---
+        function addFriend() {
+            const nameInput = document.getElementById('friend-name');
+            const name = nameInput.value.trim();
+            if (!name) return;
+
+            db.collection('users').doc(currentUser.uid).collection('friends').add({
+                name: name,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                nameInput.value = '';
+                loadFriends();
+            });
+        }
+
+        function loadFriends() {
+            if (!currentUser) return;
+            db.collection('users').doc(currentUser.uid).collection('friends').orderBy('name')
+              .get().then(snapshot => {
+                  cachedFriends = [];
+                  const listEl = document.getElementById('friends-list');
+                  const sharesContainer = document.getElementById('bill-shares-container');
+                  
+                  listEl.innerHTML = '';
+                  sharesContainer.innerHTML = '';
+
+                  snapshot.forEach(doc => {
+                      const friend = { id: doc.id, ...doc.data() };
+                      cachedFriends.push(friend);
+
+                      // عرض في تبويب الأشخاص
+                      listEl.innerHTML += `
+                        <li class="bg-slate-900 border border-slate-700 p-2.5 rounded-lg text-center font-medium flex justify-between items-center px-4">
+                            <span>${friend.name}</span>
+                            <button onclick="deleteFriend('${friend.id}')" class="text-rose-500 hover:text-rose-400 text-xs">✕</button>
+                        </li>`;
+
+                      // عرض حقول إدخال المبالغ تلقائياً في الفاتورة كـ قائمة منبثقة/ذكية لكل شخص
+                      sharesContainer.innerHTML += `
+                        <div class="bg-slate-900 border border-slate-700 p-3 rounded-lg flex items-center justify-between">
+                            <label class="text-sm font-medium text-slate-300 truncate">${friend.name}</label>
+                            <input type="number" step="0.01" data-friend-id="${friend.id}" placeholder="0.00" class="friend-share-input w-24 bg-slate-800 border border-slate-600 p-1.5 rounded text-left text-white focus:outline-none focus:border-emerald-500">
+                        </div>`;
+                  });
+              });
+        }
+
+        function deleteFriend(id) {
+            if(confirm("هل أنت متأكد من مسح هذا الشخص؟")) {
+                db.collection('users').doc(currentUser.uid).collection('friends').doc(id).delete().then(() => loadFriends());
+            }
+        }
+
+        // --- إدارة وحفظ فواتير المشتريات ---
+        function saveBill(e) {
+            e.preventDefault();
+            const date = document.getElementById('bill-date').value;
+            const time = document.getElementById('bill-time').value;
+            const location = document.getElementById('bill-location').value;
+            const totalAmount = parseFloat(document.getElementById('bill-total').value);
+
+            // تجميع توزيع الحسابات للأشخاص
+            let breakdown = {};
+            let sumOfShares = 0;
+            const shareInputs = document.querySelectorAll('.friend-share-input');
+
+            shareInputs.forEach(input => {
+                const val = parseFloat(input.value) || 0;
+                if (val > 0) {
+                    const friendId = input.getAttribute('data-friend-id');
+                    breakdown[friendId] = val;
+                    sumOfShares += val;
+                }
+            });
+
+            // منطق الفحص الحسابي الصارم: التحقق من دقة المدخلات قبل الرفع وقبل الحفظ
+            if (Math.abs(sumOfShares - totalAmount) > 0.01) {
+                alert(`خطأ حسابي: إجمالي توزيع المبالغ على الأشخاص (${sumOfShares}) لا يساوي إجمالي قيمة الفاتورة المصرح بها (${totalAmount})! يرجى المراجعة.`);
+                return;
+            }
+
+            db.collection('users').doc(currentUser.uid).collection('bills').add({
+                date,
+                time,
+                location,
+                totalAmount,
+                breakdown,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                alert("تم حفظ وتوزيع الفاتورة بنجاح في سجلاتك الرقمية!");
+                e.target.reset();
+                loadReportsData();
+            });
+        }
+
+        // --- الفلاتر والتقارير الشهرية والتجميعية ---
+        function loadReportsData() {
+            if (!currentUser) return;
+            const selectedYear = document.getElementById('filter-year').value;
+            const selectedMonth = document.getElementById('filter-month').value;
+
+            let query = db.collection('users').doc(currentUser.uid).collection('bills');
+
+            // تصفية الفواتير بحسب اختيار السنة والشهر (من أول يوم لآخر يوم بالشهر المستهدف)
+            if (selectedMonth !== 'all') {
+                const startDate = `${selectedYear}-${selectedMonth}-01`;
+                const endDate = `${selectedYear}-${selectedMonth}-31`; // تبسيط لتغطية نطاق الشهر
+                query = query.where('date', '>=', startDate).where('date', '<=', endDate);
+            } else {
+                query = query.where('date', '>=', `${selectedYear}-01-01`).where('date', '<=', `${selectedYear}-12-31`);
+            }
+
+            query.orderBy('date', 'desc').get().then(snapshot => {
+                const tbody = document.getElementById('bills-table-body');
+                const summaryListEl = document.getElementById('monthly-summary-list');
+                tbody.innerHTML = '';
+                summaryListEl.innerHTML = '';
+
+                let friendsTotals = {};
+                // تهيئة كاونتر الأشخاص
+                cachedFriends.forEach(f => friendsTotals[f.id] = 0);
+
+                snapshot.forEach(doc => {
+                    const bill = { id: doc.id, ...doc.data() };
+                    
+                    // توليد حقل شرح التوزيعات داخل الجدول
+                    let breakdownHtml = "";
+                    for (const [fId, amt] of Object.entries(bill.breakdown)) {
+                        const friendName = cachedFriends.find(f => f.id === fId)?.name || "مجهول";
+                        breakdownHtml += `<span class="inline-block bg-slate-900 border border-slate-700 text-slate-300 text-xs px-2 py-1 rounded m-0.5">${friendName}: ${amt}</span>`;
+                        
+                        // تجميع شهري تراكمي
+                        if (friendsTotals[fId] !== undefined) {
+                            friendsTotals[fId] += amt;
+                        }
+                    }
+
+                    tbody.innerHTML += `
+                        <tr class="border-b border-slate-700 hover:bg-slate-750 transition-colors">
+                            <td class="p-3 text-center text-slate-400">${bill.date} <br><span class="text-xs">${bill.time}</span></td>
+                            <td class="p-3 font-medium">${bill.location}</td>
+                            <td class="p-3 text-emerald-400 font-bold">${bill.totalAmount}</td>
+                            <td class="p-3">${breakdownHtml}</td>
+                            <td class="p-3 text-center">
+                                <button onclick="deleteBill('${bill.id}')" class="text-rose-500 hover:text-rose-400 text-xs font-semibold">حذف</button>
+                            </td>
+                        </tr>`;
+                });
+
+                // عرض بطاقات الملخص والتجميع الشهري النهائي الصافي
+                cachedFriends.forEach(friend => {
+                    const totalPurchases = friendsTotals[friend.id] || 0;
+                    summaryListEl.innerHTML += `
+                        <div class="bg-slate-800 border border-slate-700 p-3 rounded-lg text-center">
+                            <p class="text-xs text-slate-400 mb-1">${friend.name}</p>
+                            <p class="text-lg font-bold text-emerald-400">${totalPurchases.toFixed(2)}</p>
+                        </div>`;
+                });
+            });
+        }
+
+        function deleteBill(id) {
+            if (confirm("هل تريد بالتأكيد حذف هذه الفاتورة نهائياً؟")) {
+                db.collection('users').doc(currentUser.uid).collection('bills').doc(id).delete().then(() => loadReportsData());
+            }
+        }
+
+        // --- الأتمتة: سياسة حماية وحفظ البيانات لـ 3 سنوات وتطهير السنة الرابعة والأقدم ---
+        function runDataRetentionPolicy() {
+            if (!currentUser) return;
+            
+            const today = new Date();
+            const cutoffDate = new Date();
+            // حساب نقطة تاريخ القطع الصارمة (طرح 3 سنوات تماماً من تاريخ اليوم الحالي)
+            cutoffDate.setFullYear(today.getFullYear() - 3);
+            
+            // تحويل التاريخ لصيغة نصية قياسية YYYY-MM-DD لمقارنتها في الاستعلام
+            const cutoffDateString = cutoffDate.toISOString().split('T')[0];
+
+            // استعلام لجلب كافة الفواتير التي مر عليها أكثر من 3 سنوات وتعتبر في نطاق السنة الرابعة أو أقدم
+            db.collection('users').doc(currentUser.uid).collection('bills')
+              .where('date', '<', cutoffDateString)
+              .get()
+              .then(snapshot => {
+                  if (snapshot.empty) return;
+                  
+                  // تشغيل ميكانيكية المسح الآمن التتابعي بأثر رجعي
+                  let batch = db.batch();
+                  snapshot.forEach(doc => {
+                      batch.delete(doc.ref);
+                  });
+                  
+                  batch.commit().then(() => {
+                      console.log("الأتمتة الذكية: تم بنجاح تنظيف وتطهير فواتير السنة الرابعة والأقدم تلقائياً لتوفير المساحة.");
+                      loadReportsData();
+                  });
+              }).catch(err => console.error("خطأ أثناء تشغيل أتمتة تنظيف البيانات: ", err));
+        }
+    </script>
+</body>
+</html>

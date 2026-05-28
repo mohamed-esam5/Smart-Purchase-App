@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تطبيق إدارة المشتريات المشتركة - نظام 55 يوم سماح</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
         }
     </script>
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
@@ -20,6 +22,7 @@
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
 
+    <!-- شاشة تسجيل الدخول -->
     <div id="authContainer" class="flex items-center justify-center min-h-screen px-4">
         <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl max-w-md w-full border border-gray-100 dark:border-gray-700 transition-colors">
             <div class="text-center mb-8">
@@ -56,7 +59,9 @@
         </div>
     </div>
 
+    <!-- لوحة التحكم الرئيسية -->
     <div id="appContainer" class="hidden flex-1 flex flex-col">
+        <!-- شريط الهيدر العلوي الرئيسي -->
         <nav class="bg-gradient-to-r from-green-600 to-emerald-700 text-white shadow-md">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
@@ -79,6 +84,7 @@
             </div>
         </nav>
 
+        <!-- شريط التنقل بين الصفحات -->
         <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 shadow-sm transition-colors">
             <div class="max-w-7xl mx-auto px-2 sm:px-4">
                 <div class="flex justify-start space-x-1 sm:space-x-4 space-x-reverse overflow-x-auto py-2 scrollbar-none whitespace-nowrap">
@@ -88,7 +94,7 @@
                     </button>
                     <button onclick="switchPage('billsPage')" id="tab_billsPage" class="tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center space-x-2 space-x-reverse text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                         <i class="fa-solid fa-file-invoice-dollar"></i>
-                        <span>إدخال فاتورة شراء جديدة</span>
+                        <span>إدخل فاتورة شراء جديدة</span>
                     </button>
                     <button onclick="switchPage('reportsPage')" id="tab_reportsPage" class="tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center space-x-2 space-x-reverse text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                         <i class="fa-solid fa-chart-pie"></i>
@@ -102,8 +108,10 @@
             </div>
         </div>
 
+        <!-- محتوى الصفحات المنفصلة -->
         <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
             
+            <!-- 📄 الصفحة الأولى: إدارة الأشخاص -->
             <div id="page_friendsPage" class="app-page space-y-6">
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 max-w-2xl mx-auto transition-colors">
                     <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2 flex items-center space-x-2 space-x-reverse">
@@ -126,6 +134,7 @@
                 </div>
             </div>
 
+            <!-- 📄 الصفحة الثانية: إدخال فاتورة شراء جديدة -->
             <div id="page_billsPage" class="app-page hidden space-y-6">
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 max-w-3xl mx-auto transition-colors">
                     <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2 flex items-center space-x-2 space-x-reverse">
@@ -170,7 +179,8 @@
                 </div>
             </div>
 
-            <div id="page_reportsPage" class="app-page hidden space-y-8">
+            <!-- 📄 الصفحة الثالثة: التقارير وبطاقات الملخص التكيفية العريضة -->
+            <div id="page_reportsPage" class="app-page hidden space-y-8 w-full">
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row md:items-center md:justify-between gap-4 transition-colors">
                     <div>
                         <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center space-x-2 space-x-reverse">
@@ -204,14 +214,17 @@
                     </div>
                 </div>
 
+                <!-- صندوق الكروت المالي المعدل - ممتد بالكامل وتكيفي للغاية -->
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors w-full">
                     <h4 class="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4 flex items-center space-x-2">
                         <span>📊 إجمالي مستحقات ومشتريات الأشخاص للنطاق المحدد:</span>
                     </h4>
-                    <div id="monthlySummaryContainer" class="grid grid-cols-1 gap-5 w-full">
-                        </div>
+                    <div id="monthlySummaryContainer" class="flex flex-col gap-6 w-full">
+                        <!-- الكروت تتمدد هنا ممتلئة العرض 100% وتتكيف تلقائياً -->
+                    </div>
                 </div>
 
+                <!-- جدول الفواتير التفصيلي -->
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
                     <h4 class="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4">📑 كشف تفصيلي بالفواتير المدرجة في البحث:</h4>
                     <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700">
@@ -231,6 +244,7 @@
                 </div>
             </div>
 
+            <!-- 📄 الصفحة الرابعة: دفتر السداد البنكي -->
             <div id="paymentsPage" class="app-page hidden space-y-6">
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
                     <div class="border-b border-gray-100 dark:border-gray-700 pb-4 mb-6">
@@ -260,6 +274,7 @@
         </main>
     </div>
 
+    <!-- Firebase SDK Script Modules -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -312,7 +327,6 @@
         const themeToggleBtn = document.getElementById("themeToggleBtn");
         const themeToggleIcon = document.getElementById("themeToggleIcon");
 
-        // إعداد الوضع الليلي والنهاري وتذكره
         if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
             themeToggleIcon.className = "fa-solid fa-sun";
@@ -480,7 +494,7 @@
                 billDate.value = today.toISOString().split('T')[0];
                 billTime.value = today.toTimeString().split(' ')[0].substring(0, 5);
                 renderDistributionInputs();
-                alert("تم الحفظ الفوري للفاتورة بنجاح!");
+                alert("تم حفظ الفاتورة بنجاح!");
             } catch (error) {
                 alert("خطأ: " + error.message);
             }
@@ -493,11 +507,12 @@
         filterYear.addEventListener("change", calculateAndRenderReports);
         filterMonth.addEventListener("change", calculateAndRenderReports);
 
-        // المحرك الحسابي المعدل: حل مشكلة تدبيل المبالغ التراكمية عند خلو الداتا
+        // 🧠 إصلاح المحرك الحسابي التراكمي لمنع الدبلرة بشكل نهائي وقاطع
         function calculateAndRenderReports() {
             const selYear = filterYear.value;
             const selMonth = filterMonth.value;
 
+            // 1. حساب مشتريات النطاق الحالي المختار فقط
             const filteredBills = globalBills.filter(bill => {
                 if (!bill.date) return false;
                 const parts = bill.date.split('-');
@@ -514,62 +529,63 @@
                 }
             });
 
+            // 2. حساب المتأخرات والفائض التراكمي (يقف تماماً عند الشهر السابق ولا يدخل فيه الشهر الحالي المختار من الفلتر)
             const cumulativeBalances = {};
             globalFriends.forEach(f => cumulativeBalances[f.id] = { arrears: 0, credit: 0 });
 
-            // حماية برمجية: نمنع تشغيل التكرار التراكمي للشهور القديمة والترحيل الوهمي لو الداتا الحقيقية صفر
-            if (globalBills.length > 0) {
+            if (globalBills.length > 0 && selMonth !== "all") {
                 const monthsList = [];
                 for (let y = 2024; y <= 2027; y++) {
                     for (let m = 1; m <= 12; m++) monthsList.push({ year: String(y), month: String(m).padStart(2, '0') });
                 }
 
-                let targetIdx = monthsList.findIndex(x => x.year === selYear && x.month === (selMonth === "all" ? "12" : selMonth));
-                if (targetIdx === -1) targetIdx = monthsList.length - 1;
+                // نحدد الفهرس المستهدف ليكون الشهر السابق مباشرة للفلتر الحالي
+                let targetMonthIdx = monthsList.findIndex(x => x.year === selYear && x.month === selMonth);
+                let endHistoryIdx = targetMonthIdx - 1; // التوقف التام عند نهاية الشهر السابق لمنع الاحتساب المزدوج
 
-                const now = new Date();
+                if (endHistoryIdx >= 0) {
+                    const now = new Date();
 
-                globalFriends.forEach(f => {
-                    let trackingArrears = 0, trackingCredit = 0;
+                    globalFriends.forEach(f => {
+                        let trackingArrears = 0, trackingCredit = 0;
 
-                    for (let i = 0; i <= targetIdx; i++) {
-                        const cYear = monthsList[i].year, cMonth = monthsList[i].month;
-                        let loopShares = 0;
+                        for (let i = 0; i <= endHistoryIdx; i++) {
+                            const cYear = monthsList[i].year, cMonth = monthsList[i].month;
+                            let loopShares = 0;
 
-                        globalBills.forEach(bill => {
-                            if (bill.date) {
-                                const parts = bill.date.split('-');
-                                if(parts[0] === cYear && parts[1] === cMonth && bill.distribution && bill.distribution[f.id]) {
-                                    loopShares += parseFloat(bill.distribution[f.id]) || 0;
+                            globalBills.forEach(bill => {
+                                if (bill.date) {
+                                    const parts = bill.date.split('-');
+                                    if(parts[0] === cYear && parts[1] === cMonth && bill.distribution && bill.distribution[f.id]) {
+                                        loopShares += parseFloat(bill.distribution[f.id]) || 0;
+                                    }
                                 }
+                            });
+
+                            const pKey = `${f.id}_${cYear}_${cMonth}`;
+                            const paidAmount = (globalPayments[pKey] && globalPayments[pKey].amount !== undefined) ? parseFloat(globalPayments[pKey].amount) : 0;
+
+                            let loopNetRequired = (loopShares + trackingArrears) - trackingCredit;
+                            if (loopNetRequired < 0) {
+                                trackingCredit = Math.abs(loopNetRequired);
+                                trackingArrears = 0;
+                            } else {
+                                trackingCredit = 0;
+                                trackingArrears = loopNetRequired;
                             }
-                        });
 
-                        const pKey = `${f.id}_${cYear}_${cMonth}`;
-                        const paidAmount = (globalPayments[pKey] && globalPayments[pKey].amount !== undefined) ? parseFloat(globalPayments[pKey].amount) : 0;
-
-                        let loopNetRequired = (loopShares + trackingArrears) - trackingCredit;
-                        if (loopNetRequired < 0) {
-                            trackingCredit = Math.abs(loopNetRequired);
-                            trackingArrears = 0;
-                        } else {
-                            trackingCredit = 0;
-                            trackingArrears = loopNetRequired;
+                            const diffDays = Math.ceil(Math.abs(now - new Date(parseInt(cYear), parseInt(cMonth) - 1, 1)) / (1000 * 60 * 60 * 24));
+                            if (paidAmount >= loopNetRequired) {
+                                trackingCredit = paidAmount - loopNetRequired;
+                                trackingArrears = 0;
+                            } else {
+                                trackingArrears = (diffDays > 55) ? (loopNetRequired - paidAmount) : 0;
+                                trackingCredit = 0;
+                            }
                         }
-
-                        if (cYear === selYear && (selMonth === "all" || cMonth === selMonth)) break;
-
-                        const diffDays = Math.ceil(Math.abs(now - new Date(parseInt(cYear), parseInt(cMonth) - 1, 1)) / (1000 * 60 * 60 * 24));
-                        if (paidAmount >= loopNetRequired) {
-                            trackingCredit = paidAmount - loopNetRequired;
-                            trackingArrears = 0;
-                        } else {
-                            trackingArrears = (diffDays > 55) ? (loopNetRequired - paidAmount) : 0;
-                            trackingCredit = 0;
-                        }
-                    }
-                    cumulativeBalances[f.id] = { arrears: trackingArrears, credit: trackingCredit };
-                });
+                        cumulativeBalances[f.id] = { arrears: trackingArrears, credit: trackingCredit };
+                    });
+                }
             }
 
             renderBillsTable(filteredBills);
@@ -604,7 +620,7 @@
             });
         }
 
-        // التعديل الهيكلي الجديد: الكروت الآن تأخذ مساحة العرض الكاملة وتتجاوب على الهواتف بشكل رائع ومثالي
+        // 📱 تحسين هيكلي شامل: الصندوق والكروت ممتدة بالعرض الكامل وتتكيف 100% مع شاشات الجوال والكمبيوتر
         function renderMonthlySummary(shares, balances) {
             monthlySummaryContainer.innerHTML = "";
             if(globalFriends.length === 0) {
@@ -615,19 +631,35 @@
                 const purchase = shares[friend.id] || 0;
                 const arr = balances[friend.id].arrears || 0;
                 const crd = balances[friend.id].credit || 0;
+                
+                // الصافي السليم: المشتريات + المتأخرات الحقيقية القادمة من الماضي - الفائض
                 const net = (purchase + arr) - crd;
 
                 const card = document.createElement("div");
-                card.className = "bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 flex flex-col justify-between shadow-sm w-full transition-colors";
+                card.className = "bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 flex flex-col justify-between shadow-sm w-full transition-colors";
                 card.innerHTML = `
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-gray-100 dark:border-gray-700 pb-3 mb-4 gap-2">
-                        <span class="font-bold text-gray-800 dark:text-white text-base flex items-center"><i class="fa-solid fa-circle-user text-gray-400 ml-2 text-lg"></i>${friend.name}</span>
-                        <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1.5 rounded-xl border border-emerald-200 dark:border-emerald-800 self-start sm:self-center">صافي المطلوب: ${net > 0 ? net.toFixed(2) : '0.00'} ج.م</span>
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-gray-100 dark:border-gray-700 pb-4 mb-4 gap-3 w-full">
+                        <span class="font-bold text-gray-800 dark:text-white text-base sm:text-lg flex items-center">
+                            <i class="fa-solid fa-circle-user text-gray-400 ml-2 text-xl"></i>
+                            ${friend.name}
+                        </span>
+                        <span class="text-xs sm:text-sm font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-4 py-2 rounded-xl border border-emerald-200 dark:border-emerald-800 self-start sm:self-center">
+                            صافي المطلوب: ${net > 0 ? net.toFixed(2) : '0.00'} ج.م
+                        </span>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-gray-500 dark:text-gray-400 text-center">
-                        <div class="bg-gray-50 dark:bg-gray-700/50 p-2.5 rounded-xl border dark:border-gray-600">مشتريات النطاق الحالي: <b class="text-gray-800 dark:text-white block font-bold text-sm mt-1">${purchase.toFixed(2)} ج.م</b></div>
-                        <div class="bg-gray-50 dark:bg-gray-700/50 p-2.5 rounded-xl border dark:border-gray-600">متأخرات ترحيل ومتبقيات: <b class="text-red-600 dark:text-red-400 block font-bold text-sm mt-1">${arr.toFixed(2)} ج.م</b></div>
-                        <div class="bg-gray-50 dark:bg-gray-700/50 p-2.5 rounded-xl border dark:border-gray-600">فائض وأرصدة دائنة: <b class="text-blue-600 dark:text-blue-400 block font-bold text-sm mt-1">${crd.toFixed(2)} ج.م</b></div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs sm:text-sm text-gray-500 dark:text-gray-400 text-center w-full">
+                        <div class="bg-gray-50 dark:bg-gray-700/40 p-4 rounded-xl border border-gray-100 dark:border-gray-600">
+                            <span class="block text-gray-500 dark:text-gray-400 mb-1">مشتريات النطاق الحالي:</span>
+                            <b class="text-gray-900 dark:text-white block font-extrabold text-base">${purchase.toFixed(2)} ج.م</b>
+                        </div>
+                        <div class="bg-gray-50 dark:bg-gray-700/40 p-4 rounded-xl border border-gray-100 dark:border-gray-600">
+                            <span class="block text-gray-500 dark:text-gray-400 mb-1">متأخرات ترحيل ومتبقيات:</span>
+                            <b class="text-red-600 dark:text-red-400 block font-extrabold text-base">${arr.toFixed(2)} ج.م</b>
+                        </div>
+                        <div class="bg-gray-50 dark:bg-gray-700/40 p-4 rounded-xl border border-gray-100 dark:border-gray-600">
+                            <span class="block text-gray-500 dark:text-gray-400 mb-1">فائض وأرصدة دائنة:</span>
+                            <b class="text-blue-600 dark:text-blue-400 block font-extrabold text-base">${crd.toFixed(2)} ج.م</b>
+                        </div>
                     </div>
                 `;
                 monthlySummaryContainer.appendChild(card);

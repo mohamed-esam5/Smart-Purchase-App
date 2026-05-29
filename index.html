@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تطبيق إدارة المشتريات المشتركة - نظام 55 يوم سماح</title>
+    <title>تطبيق إدارة Mشتريات المشتركة - نظام 55 يوم سماح</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -160,7 +160,12 @@
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5">إجمالي القيمة الكلية للفاتورة (ج.م)</label>
-                            <input type="number" step="0.01" id="billTotal" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-base font-bold text-green-700 dark:text-green-400" placeholder="0.00">
+                            <div class="flex gap-2">
+                                <input type="number" step="0.01" id="billTotal" required class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-base font-bold text-green-700 dark:text-green-400" placeholder="0.00">
+                                <button type="button" id="splitEquallyBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-md">
+                                    <i class="fa-solid fa-divide"></i> توزيع بالتساوي
+                                </button>
+                            </div>
                         </div>
                         
                         <div class="border-t border-gray-100 dark:border-gray-700 pt-4 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl">
@@ -181,46 +186,54 @@
 
             <!-- 📄 الصفحة الثالثة: التقارير وبطاقات الملخص التكيفية العريضة -->
             <div id="page_reportsPage" class="app-page hidden space-y-8 w-full">
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row md:items-center md:justify-between gap-4 transition-colors">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 transition-colors w-full">
                     <div>
                         <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center space-x-2 space-x-reverse">
                             <i class="fa-solid fa-chart-pie text-green-600 dark:text-green-400"></i>
-                            <span>تقارير المشتريات والاستعلام المفصل</span>
+                            <span>تقارير Mشتريات والاستعلام المفصل</span>
                         </h3>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">اختر السنة والشهر لتجميع الحسابات الحقيقية للشركاء.</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">اختر فلاتر التاريخ والوقت، أو ابحث بالاسم لتصفية الحسابات الفورية بدقة.</p>
                     </div>
-                    <div class="flex space-x-2 space-x-reverse self-end md:self-center">
-                        <select id="filterYear" class="px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm font-semibold bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white">
-                            <option value="2027">2027</option>
-                            <option value="2026">2026</option>
-                            <option value="2025">2025</option>
-                            <option value="2024">2024</option>
-                        </select>
-                        <select id="filterMonth" class="px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm font-semibold bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white">
-                            <option value="all">تجميعي شامل (كل الشهور)</option>
-                            <option value="01">يناير (01)</option>
-                            <option value="02">فبراير (02)</option>
-                            <option value="03">مارس (03)</option>
-                            <option value="04">أبريل (04)</option>
-                            <option value="05">مايو (05)</option>
-                            <option value="06">يونيو (06)</option>
-                            <option value="07">يوليو (07)</option>
-                            <option value="08">أغسطس (08)</option>
-                            <option value="09">سبتمبر (09)</option>
-                            <option value="10">أكتوبر (10)</option>
-                            <option value="11">نوفمبر (11)</option>
-                            <option value="12">ديسمبر (12)</option>
-                        </select>
+                    <!-- شريط أدوات الفلترة والبحث المطور -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full lg:w-auto">
+                        <div class="relative">
+                            <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 text-xs">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </span>
+                            <input type="text" id="searchByName" class="w-full pl-3 pr-9 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-xs font-semibold bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white" placeholder="ابحث باسم الشخص...">
+                        </div>
+                        <div>
+                            <select id="filterYear" class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-xs font-semibold bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white">
+                                <!-- سيتم بناؤه ديناميكياً بواسطة الـ JavaScript -->
+                            </select>
+                        </div>
+                        <div>
+                            <select id="filterMonth" class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-xs font-semibold bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white">
+                                <option value="all">تجميعي شامل (كل الشهور)</option>
+                                <option value="01">يناير (01)</option>
+                                <option value="02">فبراير (02)</option>
+                                <option value="03">مارس (03)</option>
+                                <option value="04">أبريل (04)</option>
+                                <option value="05">مايو (05)</option>
+                                <option value="06">يونيو (06)</option>
+                                <option value="07">يوليو (07)</option>
+                                <option value="08">أغسطس (08)</option>
+                                <option value="09">سبتمبر (09)</option>
+                                <option value="10">أكتوبر (10)</option>
+                                <option value="11">نوفمبر (11)</option>
+                                <option value="12">ديسمبر (12)</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
-                <!-- صندوق الكروت المالي المعدل - ممتد بالكامل وتكيفي للغاية -->
+                <!-- صندوق الكروت المالي المعدل -->
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors w-full">
                     <h4 class="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4 flex items-center space-x-2">
-                        <span>📊 إجمالي مستحقات ومشتريات الأشخاص للنطاق المحدد:</span>
+                        <span>📊 إجمالي مشتريات الأشخاص للشهر المحدد:</span>
                     </h4>
-                    <div id="monthlySummaryContainer" class="flex flex-col gap-6 w-full">
-                        <!-- الكروت تتمدد هنا ممتلئة العرض 100% وتتكيف تلقائياً -->
+                    <div id="monthlySummaryContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+                        <!-- الكروت تتمدد هنا تلقائياً -->
                     </div>
                 </div>
 
@@ -244,7 +257,7 @@
                 </div>
             </div>
 
-            <!-- 📄 الصفحة الرابعة: دفتر السداد البنكي المصلح بالكامل -->
+            <!-- 📄 الصفحة الرابعة: دفتر السداد البنكي -->
             <div id="page_paymentsPage" class="app-page hidden space-y-6">
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors">
                     <div class="border-b border-gray-100 dark:border-gray-700 pb-4 mb-6">
@@ -263,7 +276,7 @@
                                     <th class="px-4 py-3">المبلغ المسدد بالفعل</th>
                                     <th class="px-4 py-3 text-center">حالة المديونية الصافية</th>
                                     <th class="px-4 py-3">حالة المهلة والترحيل</th>
-                                    <th class="px-4 py-3 text-center">تسجيل حركة دفع</th>
+                                    <th class="px-4 py-3 text-center">تسجيل حركة دفع / تعديل</th>
                                 </tr>
                             </thead>
                             <tbody id="paymentsTableBody" class="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800"></tbody>
@@ -319,9 +332,11 @@
         const billTime = document.getElementById("billTime");
         const billLocation = document.getElementById("billLocation");
         const billTotal = document.getElementById("billTotal");
+        const splitEquallyBtn = document.getElementById("splitEquallyBtn");
         const billDistributionContainer = document.getElementById("billDistributionContainer");
         const filterYear = document.getElementById("filterYear");
         const filterMonth = document.getElementById("filterMonth");
+        const searchByName = document.getElementById("searchByName");
         const monthlySummaryContainer = document.getElementById("monthlySummaryContainer");
         const billsTableBody = document.getElementById("billsTableBody");
         const paymentsTableBody = document.getElementById("paymentsTableBody");
@@ -351,7 +366,6 @@
         const today = new Date();
         billDate.value = today.toISOString().split('T')[0];
         billTime.value = today.toTimeString().split(' ')[0].substring(0, 5);
-        filterYear.value = today.getFullYear();
         filterMonth.value = String(today.getMonth() + 1).padStart(2, '0');
 
         window.switchPage = function(pageId) {
@@ -423,6 +437,7 @@
             onSnapshot(collection(db, "users", currentUser.uid, "bills"), (snapshot) => {
                 globalBills = [];
                 snapshot.forEach(doc => globalBills.push({ id: doc.id, ...doc.data() }));
+                buildYearFilterDropdown();
                 calculateAndRenderReports();
             });
 
@@ -431,6 +446,33 @@
                 snapshot.forEach(doc => globalPayments[doc.id] = doc.data());
                 calculateAndRenderReports();
             });
+        }
+
+        // 2. بناء قائمة فلاتر السنوات ديناميكياً بناءً على البيانات الفطرية والسنوات الحالية
+        function buildYearFilterDropdown() {
+            const years = new Set();
+            years.add(new Date().getFullYear());
+            globalBills.forEach(bill => {
+                if (bill.date) {
+                    const year = new Date(bill.date).getFullYear();
+                    if (!isNaN(year)) years.add(year);
+                }
+            });
+            
+            const currentSelected = filterYear.value;
+            filterYear.innerHTML = "";
+            Array.from(years).sort((a, b) => b - a).forEach(yr => {
+                const opt = document.createElement("option");
+                opt.value = yr;
+                opt.innerText = yr;
+                filterYear.appendChild(opt);
+            });
+            
+            if (currentSelected && years.has(parseInt(currentSelected))) {
+                filterYear.value = currentSelected;
+            } else {
+                filterYear.value = new Date().getFullYear();
+            }
         }
 
         addFriendForm.addEventListener("submit", async (e) => {
@@ -453,13 +495,26 @@
             globalFriends.forEach(friend => {
                 const badge = document.createElement("div");
                 badge.className = "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs px-3 py-2 rounded-xl font-semibold flex items-center space-x-2 space-x-reverse border border-gray-200 dark:border-gray-600";
-                badge.innerHTML = `<span>${friend.name}</span><button onclick="deleteFriend('${friend.id}')" class="text-red-500 font-bold"><i class="fa-solid fa-trash-can"></i></button>`;
+                badge.innerHTML = `<span>${friend.name}</span><button class="text-red-500 font-bold delete-friend-btn" data-id="${friend.id}"><i class="fa-solid fa-trash-can"></i></button>`;
                 friendsList.appendChild(badge);
             });
-        }
 
-        window.deleteFriend = async function(id) {
-            if(confirm("هل تريد حذف هذا الشخص؟")) await deleteDoc(doc(db, "users", currentUser.uid, "friends", id));
+            document.querySelectorAll(".delete-friend-btn").forEach(btn => {
+                btn.addEventListener("click", async function() {
+                    const id = this.getAttribute("data-id");
+                    
+                    // 3. التحقق الوقائي ومنع حذف شخص مرتبط بعمليات أو مديونيات سابقة
+                    const hasBills = globalBills.some(bill => bill.distribution && bill.distribution[id] && parseFloat(bill.distribution[id]) > 0);
+                    if (hasBills) {
+                        alert("لا يمكن حذف هذا الشخص! توجد حسابات وفواتير نشطة مسجلة باسمه في النظام. يجب تسوية وحذف فواتيره أولاً لحماية سلامة التقارير المالية.");
+                        return;
+                    }
+                    
+                    if(confirm("هل تريد حذف هذا الشخص نهائياً؟")) {
+                        await deleteDoc(doc(db, "users", currentUser.uid, "friends", id));
+                    }
+                });
+            });
         }
 
         function renderDistributionInputs() {
@@ -469,250 +524,263 @@
                 const row = document.createElement("div");
                 row.className = "flex items-center justify-between bg-white dark:bg-gray-800 p-2.5 rounded-xl border border-gray-200 dark:border-gray-700";
                 row.innerHTML = `
-                    <span class="text-xs font-bold text-gray-700 dark:text-gray-300">${friend.name}</span>
-                    <input type="number" step="0.01" data-friend-id="${friend.id}" class="friend-share-input w-28 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white font-bold" placeholder="0.00">
+                    <span class="text-xs font-semibold text-gray-700 dark:text-gray-300">${friend.name}</span>
+                    <input type="number" step="0.01" data-friend-id="${friend.id}" class="friend-bill-input w-28 px-3 py-1.5 border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg text-xs font-bold text-left focus:ring-1 focus:ring-green-500 focus:outline-none" placeholder="0.00">
                 `;
                 billDistributionContainer.appendChild(row);
             });
         }
 
+        // 4. أداة التقسيم والتوزيع الحسابي بالتساوي
+        splitEquallyBtn.addEventListener("click", () => {
+            const totalAmount = parseFloat(billTotal.value);
+            if (isNaN(totalAmount) || totalAmount <= 0) {
+                alert("يرجى إدخال إجمالي قيمة الفاتورة أولاً وبشكل صحيح.");
+                return;
+            }
+            if (globalFriends.length === 0) {
+                alert("لا يوجد أشخاص مسجلين لتوزيع الفاتورة عليهم.");
+                return;
+            }
+            
+            const splitAmount = (totalAmount / globalFriends.length).toFixed(2);
+            const inputs = document.querySelectorAll(".friend-bill-input");
+            
+            inputs.forEach(input => {
+                input.value = splitAmount;
+            });
+        });
+
         billForm.addEventListener("submit", async (e) => {
             e.preventDefault();
             const total = parseFloat(billTotal.value);
-            if (isNaN(total) || total <= 0) return;
-
             const distribution = {};
-            document.querySelectorAll(".friend-share-input").forEach(input => {
+            let sum = 0;
+
+            document.querySelectorAll(".friend-bill-input").forEach(input => {
                 const val = parseFloat(input.value) || 0;
-                if (val > 0) distribution[input.getAttribute("data-friend-id")] = val;
+                if(val > 0) {
+                    distribution[input.getAttribute("data-friend-id")] = val;
+                    sum += val;
+                }
             });
+
+            // تعديل المطابقة برمجياً للسماح بفروق الكسور الضئيلة ناتجة التقريب (0.1 ج.م)
+            if (Math.abs(sum - total) > 0.1) {
+                alert(`خطأ في توزيع المبالغ: مجموع الحصص الموزعة (${sum.toFixed(2)}) يجب أن يتطابق مع إجمالي الفاتورة (${total.toFixed(2)}).`);
+                return;
+            }
 
             try {
                 await addDoc(collection(db, "users", currentUser.uid, "bills"), {
-                    date: billDate.value, time: billTime.value, location: billLocation.value.trim(), total, distribution
+                    date: billDate.value,
+                    time: billTime.value,
+                    location: billLocation.value.trim(),
+                    total: total,
+                    distribution: distribution
                 });
                 billForm.reset();
+                renderDistributionInputs();
+                const today = new Date();
                 billDate.value = today.toISOString().split('T')[0];
                 billTime.value = today.toTimeString().split(' ')[0].substring(0, 5);
-                renderDistributionInputs();
-                alert("تم حفظ الفاتورة بنجاح!");
+                alert("تم ترحيل وحفظ الفاتورة بنجاح.");
             } catch (error) {
-                alert("خطأ: " + error.message);
+                alert("خطأ أثناء الحفظ: " + error.message);
             }
         });
 
-        window.deleteBill = async function(id) {
-            if(confirm("حذف الفاتورة؟")) await deleteDoc(doc(db, "users", currentUser.uid, "bills", id));
-        }
-
         filterYear.addEventListener("change", calculateAndRenderReports);
         filterMonth.addEventListener("change", calculateAndRenderReports);
+        searchByName.addEventListener("input", calculateAndRenderReports);
 
         function calculateAndRenderReports() {
-            const selYear = filterYear.value;
-            const selMonth = filterMonth.value;
+            if (!currentUser) return;
+
+            const selectedYear = filterYear.value;
+            const selectedMonth = filterMonth.value;
+            const searchQuery = searchByName.value.trim().toLowerCase();
+
+            const totalClaims = {};
+            globalFriends.forEach(f => totalClaims[f.id] = 0);
 
             const filteredBills = globalBills.filter(bill => {
                 if (!bill.date) return false;
-                const parts = bill.date.split('-');
-                return parts[0] === selYear && (selMonth === "all" || parts[1] === selMonth);
+                const [bYear, bMonth] = bill.date.split("-");
+                if (bYear !== selectedYear) return false;
+                if (selectedMonth !== "all" && bMonth !== selectedMonth) return false;
+                return true;
             });
 
-            const monthlyShares = {};
-            globalFriends.forEach(f => monthlyShares[f.id] = 0);
             filteredBills.forEach(bill => {
                 if (bill.distribution) {
                     Object.keys(bill.distribution).forEach(fId => {
-                        if (monthlyShares[fId] !== undefined) monthlyShares[fId] += parseFloat(bill.distribution[fId]) || 0;
-                    });
-                }
-            });
-
-            const cumulativeBalances = {};
-            globalFriends.forEach(f => cumulativeBalances[f.id] = { arrears: 0, credit: 0 });
-
-            if (globalBills.length > 0 && selMonth !== "all") {
-                const monthsList = [];
-                for (let y = 2024; y <= 2027; y++) {
-                    for (let m = 1; m <= 12; m++) monthsList.push({ year: String(y), month: String(m).padStart(2, '0') });
-                }
-
-                let targetMonthIdx = monthsList.findIndex(x => x.year === selYear && x.month === selMonth);
-                let endHistoryIdx = targetMonthIdx - 1; 
-
-                if (endHistoryIdx >= 0) {
-                    const now = new Date();
-
-                    globalFriends.forEach(f => {
-                        let trackingArrears = 0, trackingCredit = 0;
-
-                        for (let i = 0; i <= endHistoryIdx; i++) {
-                            const cYear = monthsList[i].year, cMonth = monthsList[i].month;
-                            let loopShares = 0;
-
-                            globalBills.forEach(bill => {
-                                if (bill.date) {
-                                    const parts = bill.date.split('-');
-                                    if(parts[0] === cYear && parts[1] === cMonth && bill.distribution && bill.distribution[f.id]) {
-                                        loopShares += parseFloat(bill.distribution[f.id]) || 0;
-                                    }
-                                }
-                            });
-
-                            const pKey = `${f.id}_${cYear}_${cMonth}`;
-                            const paidAmount = (globalPayments[pKey] && globalPayments[pKey].amount !== undefined) ? parseFloat(globalPayments[pKey].amount) : 0;
-
-                            let loopNetRequired = (loopShares + trackingArrears) - trackingCredit;
-                            if (loopNetRequired < 0) {
-                                trackingCredit = Math.abs(loopNetRequired);
-                                trackingArrears = 0;
-                            } else {
-                                trackingCredit = 0;
-                                trackingArrears = loopNetRequired;
-                            }
-
-                            const diffDays = Math.ceil(Math.abs(now - new Date(parseInt(cYear), parseInt(cMonth) - 1, 1)) / (1000 * 60 * 60 * 24));
-                            if (paidAmount >= loopNetRequired) {
-                                trackingCredit = paidAmount - loopNetRequired;
-                                trackingArrears = 0;
-                            } else {
-                                trackingArrears = (diffDays > 55) ? (loopNetRequired - paidAmount) : 0;
-                                trackingCredit = 0;
-                            }
+                        if (totalClaims[fId] !== undefined) {
+                            totalClaims[fId] += bill.distribution[fId];
                         }
-                        cumulativeBalances[f.id] = { arrears: trackingArrears, credit: trackingCredit };
                     });
                 }
-            }
-
-            renderBillsTable(filteredBills);
-            renderMonthlySummary(monthlyShares, cumulativeBalances);
-            renderPaymentsPanel(monthlyShares, cumulativeBalances, selYear, selMonth);
-        }
-
-        function renderBillsTable(bills) {
-            billsTableBody.innerHTML = "";
-            if (bills.length === 0) {
-                billsTableBody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-gray-500 text-xs">لا توجد فواتير حالية.</td></tr>`;
-                return;
-            }
-            bills.forEach(bill => {
-                let distText = [];
-                if (bill.distribution) {
-                    Object.keys(bill.distribution).forEach(fId => {
-                        const f = globalFriends.find(x => x.id === fId);
-                        distText.push(`${f ? f.name : "مجهول"}: ${(parseFloat(bill.distribution[fId])).toFixed(2)} ج.م`);
-                    });
-                }
-                const row = document.createElement("tr");
-                row.className = "hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b dark:border-gray-700";
-                row.innerHTML = `
-                    <td class="px-4 py-3.5 text-xs text-gray-600 dark:text-gray-400">${bill.date}</td>
-                    <td class="px-4 py-3.5 text-xs font-bold">${bill.location}</td>
-                    <td class="px-4 py-3.5 text-xs font-extrabold text-green-700 dark:text-green-400">${parseFloat(bill.total).toFixed(2)} ج.م</td>
-                    <td class="px-4 py-3.5 text-xs text-gray-600 dark:text-gray-300">${distText.join(" ، ")}</td>
-                    <td class="px-4 py-3.5 text-center"><button onclick="deleteBill('${bill.id}')" class="text-red-500 text-xs font-bold"><i class="fa-solid fa-trash-can"></i> حذف</button></td>
-                `;
-                billsTableBody.appendChild(row);
             });
-        }
 
-        function renderMonthlySummary(shares, balances) {
+            const finalFriendsToShow = globalFriends.filter(friend => {
+                if (!searchQuery) return true;
+                return friend.name.toLowerCase().includes(searchQuery);
+            });
+
+            // بناء كروت الملخص المالي
             monthlySummaryContainer.innerHTML = "";
-            if(globalFriends.length === 0) {
-                monthlySummaryContainer.innerHTML = `<p class="text-xs text-gray-400">يرجى إضافة شركاء أولاً.</p>`;
-                return;
-            }
-            globalFriends.forEach(friend => {
-                const purchase = shares[friend.id] || 0;
-                const arr = balances[friend.id].arrears || 0;
-                const crd = balances[friend.id].credit || 0;
-                
-                const net = (purchase + arr) - crd;
+            finalFriendsToShow.forEach(friend => {
+                const claim = totalClaims[friend.id] || 0;
+                const paid = globalPayments[friend.id]?.paid || 0;
+                const balance = claim - paid;
 
                 const card = document.createElement("div");
-                card.className = "bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 flex flex-col justify-between shadow-sm w-full transition-colors";
+                card.className = "bg-gray-50 dark:bg-gray-700/40 p-4 rounded-xl border border-gray-100 dark:border-gray-600/50 flex flex-col justify-between shadow-sm";
                 card.innerHTML = `
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-gray-100 dark:border-gray-700 pb-4 mb-4 gap-3 w-full">
-                        <span class="font-bold text-gray-800 dark:text-white text-base sm:text-lg flex items-center">
-                            <i class="fa-solid fa-circle-user text-gray-400 ml-2 text-xl"></i>
-                            ${friend.name}
+                    <div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-600 pb-2 mb-2">
+                        <span class="font-bold text-xs text-gray-800 dark:text-white flex items-center gap-1">
+                            <i class="fa-solid fa-user text-green-600"></i> ${friend.name}
                         </span>
-                        <span class="text-xs sm:text-sm font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-4 py-2 rounded-xl border border-emerald-200 dark:border-emerald-800 self-start sm:self-center">
-                            صافي المطلوب: ${net > 0 ? net.toFixed(2) : '0.00'} ج.م
-                        </span>
+                        <span class="text-[10px] bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 font-bold px-2 py-0.5 rounded-full">حساب نشط</span>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs sm:text-sm text-gray-500 dark:text-gray-400 text-center w-full">
-                        <div class="bg-gray-50 dark:bg-gray-700/40 p-4 rounded-xl border border-gray-100 dark:border-gray-600">
-                            <span class="block text-gray-500 dark:text-gray-400 mb-1">مشتريات النطاق الحالي:</span>
-                            <b class="text-gray-900 dark:text-white block font-extrabold text-base">${purchase.toFixed(2)} ج.م</b>
+                    <div class="grid grid-cols-3 gap-1 text-center text-xs">
+                        <div>
+                            <p class="text-[10px] text-gray-400">المطالبة</p>
+                            <p class="font-bold text-gray-700 dark:text-gray-300">${claim.toFixed(2)}</p>
                         </div>
-                        <div class="bg-gray-50 dark:bg-gray-700/40 p-4 rounded-xl border border-gray-100 dark:border-gray-600">
-                            <span class="block text-gray-500 dark:text-gray-400 mb-1">متأخرات ترحيل ومتبقيات:</span>
-                            <b class="text-red-600 dark:text-red-400 block font-extrabold text-base">${arr.toFixed(2)} ج.م</b>
+                        <div>
+                            <p class="text-[10px] text-gray-400">المسدد</p>
+                            <p class="font-bold text-emerald-600 dark:text-emerald-400">${paid.toFixed(2)}</p>
                         </div>
-                        <div class="bg-gray-50 dark:bg-gray-700/40 p-4 rounded-xl border border-gray-100 dark:border-gray-600">
-                            <span class="block text-gray-500 dark:text-gray-400 mb-1">فائض وأرصدة دائنة:</span>
-                            <b class="text-blue-600 dark:text-blue-400 block font-extrabold text-base">${crd.toFixed(2)} ج.م</b>
+                        <div>
+                            <p class="text-[10px] text-gray-400">الصافي</p>
+                            <p class="font-bold ${balance > 0 ? 'text-red-500' : 'text-blue-500'}">${balance.toFixed(2)}</p>
                         </div>
                     </div>
                 `;
                 monthlySummaryContainer.appendChild(card);
             });
-        }
 
-        function renderPaymentsPanel(shares, balances, year, month) {
-            paymentsTableBody.innerHTML = "";
-            if (globalFriends.length === 0 || month === "all") {
-                paymentsTableBody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-gray-500 text-xs">حدد شهر معين لمتابعة السداد البنكي.</td></tr>`;
-                return;
+            // بناء جدول كشف الفواتير التفصيلي
+            billsTableBody.innerHTML = "";
+            if (filteredBills.length === 0) {
+                billsTableBody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-xs text-gray-400">لا توجد فواتير مطابقة لخيارات البحث الحالية.</td></tr>`;
+            } else {
+                filteredBills.forEach(bill => {
+                    let distText = [];
+                    if (bill.distribution) {
+                        Object.keys(bill.distribution).forEach(fId => {
+                            const fName = globalFriends.find(f => f.id === fId)?.name || "مجهول";
+                            distText.push(`${fName}: ${bill.distribution[fId].toFixed(2)} ج.م`);
+                        });
+                    }
+
+                    const tr = document.createElement("tr");
+                    tr.className = "hover:bg-gray-50 dark:hover:bg-gray-700/30 transition";
+                    tr.innerHTML = `
+                        <td class="px-4 py-3 text-xs font-medium">${bill.date} | ${bill.time || ''}</td>
+                        <td class="px-4 py-3 text-xs font-semibold">${bill.location}</td>
+                        <td class="px-4 py-3 text-xs font-bold text-green-600 dark:text-green-400">${bill.total.toFixed(2)} ج.م</td>
+                        <td class="px-4 py-3 text-[11px] text-gray-500 dark:text-gray-400 max-w-xs whitespace-normal leading-relaxed">${distText.join(" ، ")}</td>
+                        <td class="px-4 py-3 text-center">
+                            <button class="text-red-500 text-xs font-bold hover:underline delete-bill-btn" data-id="${bill.id}"><i class="fa-solid fa-trash-can"></i> حذف</button>
+                        </td>
+                    `;
+                    billsTableBody.appendChild(tr);
+                });
+
+                document.querySelectorAll(".delete-bill-btn").forEach(btn => {
+                    btn.addEventListener("click", async function() {
+                        if(confirm("هل أنت متأكد من حذف هذه الفاتورة وإلغاء ترحيلها المالي؟")) {
+                            await deleteDoc(doc(db, "users", currentUser.uid, "bills", this.getAttribute("data-id")));
+                        }
+                    });
+                });
             }
-            const daysLeftInGrace = 55 - Math.floor(((new Date()) - new Date(parseInt(year), parseInt(month) - 1, 1)) / (1000 * 60 * 60 * 24));
 
+            // بناء جدول صفحة دفتر السداد والـ 55 يوم
+            paymentsTableBody.innerHTML = "";
             globalFriends.forEach(friend => {
-                const rawRequired = ((shares[friend.id] || 0) + balances[friend.id].arrears) - balances[friend.id].credit;
-                const totalRequired = rawRequired > 0 ? rawRequired : 0;
-                const currentPaid = globalPayments[`${friend.id}_${year}_${month}`]?.amount ? parseFloat(globalPayments[`${friend.id}_${year}_${month}`].amount) : 0;
+                // تجميع شامل لكل مطالبته المالية دون التقيد بالشهور لتهيئة السداد البنكي
+                let allTimeClaim = 0;
+                globalBills.forEach(b => {
+                    if (b.distribution && b.distribution[friend.id]) {
+                        allTimeClaim += b.distribution[friend.id];
+                    }
+                });
 
-                let statusBadgeHTML = "";
-                const difference = currentPaid - totalRequired;
+                const paid = globalPayments[friend.id]?.paid || 0;
+                const net = allTimeClaim - paid;
 
-                if (Math.abs(difference) < 0.01) {
-                    statusBadgeHTML = `<span class="bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 px-3 py-1.5 rounded-xl text-xs font-bold border border-emerald-200 dark:border-emerald-800"><i class="fa-solid fa-circle-check ml-1"></i>تم السداد بالكامل</span>`;
-                } else if (difference < 0) {
-                    statusBadgeHTML = `<span class="bg-red-100 dark:bg-red-950/60 text-red-800 dark:text-red-300 px-3 py-1.5 rounded-xl text-xs font-bold border border-red-200 dark:border-red-800"><i class="fa-solid fa-circle-exclamation ml-1"></i>متبقي: ${Math.abs(difference).toFixed(2)} ج.م</span>`;
+                let badgeGrace = "";
+                if(net <= 0) {
+                    badgeGrace = `<span class="bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 text-[10px] px-2.5 py-1 rounded-full font-bold">خالص السداد مخمور</span>`;
                 } else {
-                    statusBadgeHTML = `<span class="bg-green-100 dark:bg-green-950/60 text-green-800 dark:text-green-300 px-3 py-1.5 rounded-xl text-xs font-bold border border-green-200 dark:border-green-800"><i class="fa-solid fa-piggy-bank ml-1"></i>فائض: ${difference.toFixed(2)} ج.م</span>`;
+                    badgeGrace = `<span class="bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 text-[10px] px-2.5 py-1 rounded-full font-bold"><i class="fa-solid fa-clock"></i> تحت مهلة 55 يوم</span>`;
                 }
 
-                const row = document.createElement("tr");
-                row.className = "hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b dark:border-gray-700";
-                row.innerHTML = `
-                    <td class="px-4 py-3.5 text-xs font-bold">${friend.name}</td>
-                    <td class="px-4 py-3.5 text-xs font-bold text-gray-700 dark:text-gray-300">${totalRequired.toFixed(2)} ج.م</td>
-                    <td class="px-4 py-3.5 text-xs font-bold text-emerald-700 dark:text-emerald-400">${currentPaid.toFixed(2)} ج.م</td>
-                    <td class="px-4 py-3.5 text-center">${statusBadgeHTML}</td>
-                    <td class="px-4 py-3.5 text-xs"><span class="bg-sky-100 dark:bg-sky-950/50 text-sky-800 dark:text-sky-300 px-2 py-1 rounded-lg text-[10px] font-bold">متبقي ${daysLeftInGrace > 0 ? daysLeftInGrace : 0} يوم</span></td>
-                    <td class="px-4 py-3.5 text-center">
-                        <div class="flex items-center justify-center space-x-1.5 space-x-reverse">
-                            <input type="number" step="0.01" id="input_pay_${friend.id}" class="w-24 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white font-bold" placeholder="0.00">
-                            <button onclick="savePaymentAction('${friend.id}', '${year}', '${month}')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg text-xs font-bold shadow-sm transition">حفظ</button>
+                const tr = document.createElement("tr");
+                tr.className = "hover:bg-gray-50 dark:hover:bg-gray-700/30 transition";
+                tr.innerHTML = `
+                    <td class="px-4 py-3 text-xs font-bold text-gray-800 dark:text-gray-200">${friend.name}</td>
+                    <td class="px-4 py-3 text-xs font-semibold text-gray-600 dark:text-gray-400">${allTimeClaim.toFixed(2)} ج.م</td>
+                    <td class="px-4 py-3 text-xs font-semibold text-emerald-600 dark:text-emerald-400">${paid.toFixed(2)} ج.م</td>
+                    <td class="px-4 py-3 text-center text-xs font-bold ${net > 0 ? 'text-red-500' : 'text-blue-500'}">${net.toFixed(2)} ج.م</td>
+                    <td class="px-4 py-3 text-right">${badgeGrace}</td>
+                    <td class="px-4 py-3 text-center">
+                        <div class="flex items-center justify-center gap-1.5">
+                            <input type="number" step="0.01" id="pay_input_${friend.id}" class="w-20 px-2 py-1 border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 rounded-lg text-xs font-bold text-center focus:outline-none" placeholder="المبلغ">
+                            <button class="bg-emerald-600 hover:bg-emerald-700 text-white p-1.5 rounded-lg text-xs font-bold transition confirm-pay-btn" data-id="${friend.id}" title="تأكيد إضافة الدفع">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                            <!-- 1. إضافة زر تصفير السداد وإعادة التعيين التام -->
+                            <button class="bg-red-500 hover:bg-red-600 text-white p-1.5 rounded-lg text-xs font-bold transition reset-pay-btn" data-id="${friend.id}" title="تصفير السداد وإعادة تعيين الحقل">
+                                <i class="fa-solid fa-arrow-rotate-left"></i>
+                            </button>
                         </div>
                     </td>
                 `;
-                paymentsTableBody.appendChild(row);
+                paymentsTableBody.appendChild(tr);
             });
-        }
 
-        window.savePaymentAction = async function(friendId, year, month) {
-            const amount = parseFloat(document.getElementById(`input_pay_${friendId}`).value);
-            if (isNaN(amount) || amount < 0) return;
-            try {
-                await setDoc(doc(db, "users", currentUser.uid, "payments", `${friendId}_${year}_${month}`), { friendId, year, month, amount, timestamp: new Date() });
-                alert("تم تعديل الدفتر الحسابي بنجاح!");
-            } catch (error) {
-                alert("خطأ: " + error.message);
-            }
+            // تفعيل مستمعي أزرار تأكيد السداد
+            document.querySelectorAll(".confirm-pay-btn").forEach(btn => {
+                btn.addEventListener("click", async function() {
+                    const fId = this.getAttribute("data-id");
+                    const inputEl = document.getElementById(`pay_input_${fId}`);
+                    const val = parseFloat(inputEl.value);
+                    if (isNaN(val) || val <= 0) {
+                        alert("يرجى إدخال مبلغ دفع صحيح وزائد عن الصفر.");
+                        return;
+                    }
+
+                    const currentPaid = globalPayments[fId]?.paid || 0;
+                    const newPaid = currentPaid + val;
+
+                    try {
+                        await setDoc(doc(db, "users", currentUser.uid, "payments", fId), { paid: newPaid });
+                        inputEl.value = "";
+                        alert("تم تسجيل حركة السداد البنكي بنجاح.");
+                    } catch (error) {
+                        alert("خطأ: " + error.message);
+                    }
+                });
+            });
+
+            // تفعيل مستمعي أزرار تصفير (Reset) وإعادة تعيين السداد البنكي للأفراد
+            document.querySelectorAll(".reset-pay-btn").forEach(btn => {
+                btn.addEventListener("click", async function() {
+                    const fId = this.getAttribute("data-id");
+                    if (confirm("هل أنت متأكد من تصفير وإعادة تعيين سجل المدفوعات لهذا الشخص؟ سيتم إرجاع المبلغ المسدد إلى 0.")) {
+                        try {
+                            await setDoc(doc(db, "users", currentUser.uid, "payments", fId), { paid: 0 });
+                            alert("تم تصفيّر دفتر السداد لهذا الفرد بنجاح.");
+                        } catch (error) {
+                            alert("خطأ أثناء إعادة التعيين: " + error.message);
+                        }
+                    }
+                });
+            });
         }
     </script>
 </body>

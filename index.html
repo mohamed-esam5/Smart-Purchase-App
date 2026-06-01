@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Purchase - أرشيف الفواتير المغلقة</title>
+    
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/bills.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ضبط الحاوية الرئيسية وتناسق الهوامش */
+        .bills-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 24px;
+            box-sizing: border-box;
+        }
+
+        /* حاوية الجدول المتجاوبة والمطابقة لألوان الهوية المظلمة والفاتحة */
+        .table-container {
+            background-color: var(--card-bg, #ffffff);
+            border: 1px solid var(--border-color, #e2e8f0);
+            border-radius: 12px;
+            overflow-x: auto;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            margin-top: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .main-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+        }
+
+        /* -------------------------------------------------------- */
+        /* 1. التنسيق في الوضع الفاتح الافتراضي (Light Mode) */
+        /* -------------------------------------------------------- */
+        .main-table th {
+            background-color: #f8fafc !important;
+            color: #1e293b !important;
+            font-weight: 700 !important;
+            padding: 16px 20px !important;
+            border-bottom: 2px solid #e2e8f0 !important;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .main-table td {
+            padding: 16px 20px !important;
+            vertical-align: middle !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+            color: #334155 !important;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* تنسيق الأقراص والبادجات المحقونة من الـ JS لمنع الكتل البيضاء */
+        #archive-table-body td div,
+        #archive-table-body td span,
+        #archive-table-body td strong,
+        #archive-table-body td badge {
+            background-color: #f1f5f9 !important; 
+            color: #1e293b !important;
+            padding: 6px 12px !important;
+            margin: 4px 0 !important;
+            border-radius: 8px !important;
+            border: 1px solid #e2e8f0 !important;
+            display: inline-block !important;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* تحسين أزرار الإجراءات (استعادة الفاتورة) */
+        .main-table .btn-action {
+            padding: 8px 14px !important;
+            border-radius: 8px !important;
+            font-family: 'Cairo', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .btn-restore {
+            background-color: #e0f2fe !important;
+            color: #0369a1 !important;
+            border-color: #bae6fd !important;
+        }
+        .btn-restore:hover {
+            background-color: #bae6fd !important;
+            transform: translateY(-1px);
+        }
+
+        .main-table tbody tr {
+            background-color: #ffffff !important;
+            transition: background-color 0.2s ease;
+        }
+
+        .main-table tbody tr:hover {
+            background-color: #f8fafc !important;
+        }
+
+        /* -------------------------------------------------------- */
+        /* 2. التنسيق والتقفيل الذكي في الوضع المظلم (Dark Mode) */
+        /* -------------------------------------------------------- */
+        html.dark-mode .table-container {
+            background-color: #111827 !important;
+            border-color: #1f2937 !important;
+        }
+
+        html.dark-mode .main-table th {
+            background-color: #1f2937 !important;
+            color: #f9fafb !important;
+            border-bottom: 2px solid #374151 !important;
+        }
+
+        html.dark-mode .main-table tbody tr {
+            background-color: #111827 !important;
+        }
+
+        html.dark-mode .main-table td {
+            color: #f3f4f6 !important;
+            border-bottom: 1px solid #1f2937 !important;
+        }
+
+        /* سحق وإبادة تامة لأي كتل أو خلفيات بيضاء مفرومة من الـ JS */
+        html.dark-mode #archive-table-body td div,
+        html.dark-mode #archive-table-body td span,
+        html.dark-mode #archive-table-body td strong,
+        html.dark-mode #archive-table-body td badge,
+        html.dark-mode #archive-table-body td * {
+            background-color: #1f2937 !important; /* مطابقة لخلفية الرأس والكروت */
+            color: #38bdf8 !important; /* نصوص زرقاء زاهية ومريحة للعين */
+            border: 1px solid #374151 !important;
+        }
+
+        /* ضبط زر الاستعادة والـ Actions في الـ Dark Mode تماماً كالصورة الرابعة */
+        html.dark-mode .btn-restore {
+            background-color: rgba(3, 105, 161, 0.2) !important;
+            color: #38bdf8 !important;
+            border: 1px solid rgba(56, 189, 248, 0.3) !important;
+        }
+        html.dark-mode .btn-restore:hover {
+            background-color: rgba(3, 105, 161, 0.4) !important;
+            color: #f9fafb !important;
+        }
+
+        html.dark-mode .main-table tbody tr:hover {
+            background-color: #1f2937 !important;
+        }
+    </style>
+
+    <script>
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark-mode');
+        }
+    </script>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo">
+                <i class="fa-solid fa-wallet"></i>
+                <span>Smart Purchase</span>
+            </div>
+            <nav class="nav-links">
+                <a href="dashboard.html"><i class="fa-solid fa-chart-pie"></i> الرئيسية</a>
+                <a href="bills.html"><i class="fa-solid fa-file-invoice-dollar"></i> الفواتير</a>
+                <a href="persons.html"><i class="fa-solid fa-users"></i> الأشخاص</a>
+                <a href="payments.html"><i class="fa-solid fa-money-bill-transfer"></i> السداد</a>
+                <a href="reports.html"><i class="fa-solid fa-magnifying-glass-chart"></i> التقارير</a>
+                <a href="archive.html" class="active"><i class="fa-solid fa-box-archive"></i> الأرشيف</a>
+            </nav>
+            <div class="user-actions">
+                <button id="theme-toggle-btn" style="background: none; border: none; color: inherit; font-size: 18px; cursor: pointer; margin-left: 15px;" title="تبديل الوضع">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <button id="logout-btn" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> خروج</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="bills-container">
+        <div class="page-title-box">
+            <div>
+                <h2>أرشيف الفواتير المسددة والمغلقة</h2>
+                <p>هنا تجد كافة الفواتير القديمة التي قمت بأرشفتها لحفظ السجلات على المدى الطويل</p>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table class="main-table">
+                <thead>
+                    <tr>
+                        <th>البيان وطريقة الدفع</th>
+                        <th>الأشخاص وتوزيع المبالغ</th>
+                        <th>المبلغ الإجمالي</th>
+                        <th>تاريخ الشراء</th>
+                        <th>تاريخ الاستحقاق</th>
+                        <th>الحالة المحاسبية</th>
+                        <th>إجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="archive-table-body">
+                    <tr>
+                        <td colspan="7" style="text-align:center; color: var(--text-muted, #94a3b8); padding: 40px; font-family: 'Cairo';">جاري فتح الخزنة التاريخية للأرشيف...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script type="module" src="js/archive.js"></script>
+    <script src="js/theme.js"></script>
+</body>
+</html>

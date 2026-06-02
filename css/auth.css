@@ -1,0 +1,169 @@
+/* css/auth.css */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Cairo', sans-serif;
+}
+
+/* 🔵 المتغيرات الافتراضية - الوضع الفاتح (Light Mode) */
+:root {
+    --auth-bg: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    --box-bg: #ffffff;
+    --title-color: #1e3c72;
+    --text-color: #333333;
+    --subtitle-color: #666666;
+    --label-color: #444444;
+    --input-border: #cccccc;
+    --input-bg: #ffffff;
+    --input-text: #333333;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+    --toggle-link-color: #1e3c72;
+}
+
+/* 🌙 تحويل المتغيرات تلقائياً - الوضع الداكن (Dark Mode) المحدث لمنع الوميض */
+html.dark-mode {
+    --auth-bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    --box-bg: #1e293b;
+    --title-color: #38bdf8;
+    --text-color: #f1f5f9;
+    --subtitle-color: #94a3b8;
+    --label-color: #cbd5e1;
+    --input-border: #475569;
+    --input-bg: #334155;
+    --input-text: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    --toggle-link-color: #38bdf8;
+}
+
+body {
+    background: var(--auth-bg);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-color);
+    transition: background 0.3s, color 0.3s;
+}
+
+.auth-container {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.auth-box {
+    background: var(--box-bg);
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px var(--shadow-color);
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    transition: background 0.3s, box-shadow 0.3s;
+}
+
+h2 {
+    color: var(--title-color);
+    margin-bottom: 8px;
+    font-weight: 700;
+    transition: color 0.3s;
+}
+
+.auth-subtitle {
+    color: var(--subtitle-color);
+    font-size: 14px;
+    margin-bottom: 30px;
+    transition: color 0.3s;
+}
+
+.input-group {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--label-color);
+    transition: color 0.3s;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--input-border);
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border-radius: 6px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+}
+
+.input-group input:focus {
+    border-color: var(--title-color);
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    background: #1e3c72;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 10px;
+}
+
+html.dark-mode .btn-primary {
+    background: #0284c7;
+}
+
+html.dark-mode .btn-primary:hover {
+    background: #38bdf8;
+}
+
+.btn-primary:hover {
+    background: #2a5298;
+}
+
+.auth-toggle {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.auth-toggle a {
+    color: var(--toggle-link-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.auth-toggle a:hover {
+    text-decoration: underline;
+}
+
+.error-msg {
+    margin-top: 15px;
+    color: #d9534f;
+    font-size: 14px;
+    display: none;
+    background: #fdf7f7;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #eed3d2;
+}
+
+/* 🌓 مواءمة صندوق الخطأ البرمجي في الوضع الداكن المحدث */
+html.dark-mode .error-msg {
+    background: #2d1f20;
+    color: #ef4444;
+    border-color: #7f1d1d;
+}

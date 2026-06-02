@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Purchase - صفحة السداد والتسويات</title>
+    
+    <link rel="stylesheet" href="css/global.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* 🔒 حماية الشاشة والجسم ومنع التمدد الأفقي نهائياً */
+        html, body {
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+            box-sizing: border-box;
+        }
+
+        /* ضبط الحاوية الرئيسية لتطابق هوامش السيستم الدقيقة */
+        .bills-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        /* شبكة تقسيم عادلة ومنظمة تمنع التداخل (الجدول أولاً بمساحة أكبر ثم الكارت) */
+        .payments-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-top: 24px;
+            align-items: start;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        /* ضبط كروت واجهة العرض وحمايتها من التمدد الزائد */
+        .payment-card-panel {
+            background-color: var(--card-bg, #1e293b);
+            border: 1px solid var(--border-color, #334155);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            width: 100%;
+            min-width: 0; /* خطوة أساسية لمنع الـ Grid من التمدد خارج الشاشة */
+        }
+        
+        .payment-card-panel h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #38bdf8; /* لون متناسق مع الـ Dark Mode */
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid var(--border-color, #334155);
+            padding-bottom: 12px;
+        }
+
+        /* 📊 الحاوية السحرية: تفعيل الاسكرول الأفقي للجدول ومنع خروجه عن كرت الحاوية */
+        .table-container {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: auto !important; /* تفعيل التمرير الأفقي هنا */
+            display: block !important;
+            -webkit-overflow-scrolling: touch; /* تمرير سلس على هواتف الآيفون والموبايل */
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        /* ضبط خلايا وعناصر الجدول */
+        .main-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px; /* فرش الجدول بمساحة مريحة لإجبار الاسكرول الأفقي على الموبايل */
+        }
+
+        .main-table th {
+            background-color: rgba(15, 23, 42, 0.5) !important;
+            color: var(--text-color, #f8fafc);
+            font-weight: 700;
+            padding: 14px 16px;
+            white-space: nowrap; /* منع العناوين من الالتفاف أو التكسر لسطرين */
+        }
+
+        .main-table td {
+            padding: 14px 16px;
+            vertical-align: middle;
+            white-space: nowrap; /* الحفاظ على البيانات في سطر واحد منظم أثناء الاسكرول */
+        }
+
+        /* تنظيم عناصر الفورم رأسياً بمسافات متناسقة */
+        .form-group {
+            margin-bottom: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-color, #f8fafc);
+        }
+
+        /* ضبط الحقول (Select & Input) لتملأ الحاوية بشكل أنيق */
+        .payment-card-panel select,
+        .payment-card-panel input[type="number"] {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color, #334155);
+            background-color: #1e293b; 
+            color: var(--text-color, #f8fafc);
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        /* حل مشكلة اللون الفاتح جداً عند الضغط أو التركيز (Focus) */
+        .payment-card-panel select:focus,
+        .payment-card-panel input[type="number"]:focus {
+            border-color: #38bdf8; 
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); 
+            background-color: #0f172a; 
+        }
+
+        /* إجبار المتصفح على رندرة الخيارات الداخلية (Options) باللون الغامق */
+        .payment-card-panel select option {
+            background-color: #1e293b !important; 
+            color: #f8fafc !important; 
+            padding: 10px;
+        }
+
+        /* هندسة مجموعات الراديو لتكون مصفوفة بانتظام */
+        .custom-radio-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            background-color: rgba(15, 23, 42, 0.4);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color, #334155);
+            box-sizing: border-box;
+        }
+        
+        .custom-radio-option {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; 
+            gap: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13.5px;
+            color: var(--text-color, #f8fafc);
+            user-select: none;
+        }
+
+        .custom-radio-option input[type="radio"] { 
+            width: 16px; 
+            height: 16px; 
+            margin: 0;
+            cursor: pointer; 
+        }
+
+        /* ضبط صناديق الحالات المحاسبية والتنبيهات الدورية */
+        .status-box {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 1.6;
+            border: 1px dashed transparent;
+        }
+        
+        .status-debt { 
+            background-color: rgba(239, 68, 68, 0.15); 
+            color: #fca5a5; 
+            border-color: rgba(239, 68, 68, 0.3); 
+        }
+        .status-credit { 
+            background-color: rgba(34, 197, 94, 0.15); 
+            color: #86efac; 
+            border-color: rgba(34, 197, 94, 0.3); 
+        }
+        .status-zero { 
+            background-color: rgba(148, 163, 184, 0.1); 
+            color: #cbd5e1; 
+            border-color: rgba(148, 163, 184, 0.2); 
+        }
+
+        /* زر تأكيد الحساب الأساسي للسيستم */
+        .btn-submit-form {
+            width: 100%;
+            padding: 12px;
+            background-color: #38bdf8;
+            color: #0f172a;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-submit-form:hover {
+            background-color: #0ea5e9;
+        }
+
+        /* 📱 تحويل الشاشة بالكامل لعمود واحد عند التجاوب مع الموبايل والشاشات الصغيرة */
+        @media (max-width: 1024px) {
+            .payments-layout {
+                grid-template-columns: 1fr !important;
+                gap: 20px;
+            }
+            .bills-container {
+                padding: 12px;
+            }
+            .payment-card-panel {
+                padding: 16px;
+            }
+        }
+    </style>
+    
+    <script>
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark-mode');
+        }
+    </script>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo">
+                <i class="fa-solid fa-wallet"></i>
+                <span>Smart Purchase</span>
+            </div>
+            <nav class="nav-links">
+                <a href="dashboard.html"><i class="fa-solid fa-chart-pie"></i> الرئيسية</a>
+                <a href="bills.html"><i class="fa-solid fa-file-invoice-dollar"></i> الفواتير</a>
+                <a href="payments.html" class="active"><i class="fa-solid fa-money-bill-transfer"></i> السداد</a>
+                <a href="persons.html"><i class="fa-solid fa-users"></i> الأشخاص</a>
+                <a href="reports.html"><i class="fa-solid fa-magnifying-glass-chart"></i> التقارير</a>
+                 <a href="archive.html"><i class="fa-solid fa-box-archive"></i> الأرشيف</a>
+            </nav>
+            <div class="user-actions">
+                <button id="theme-toggle-btn" style="background: none; border: none; color: inherit; font-size: 18px; cursor: pointer; margin-left: 15px;" title="تبديل الوضع">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <button id="logout-btn" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> خروج</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="bills-container">
+        
+        <div class="page-title-box">
+            <div>
+                <h2>منظومة تسوية حسابات الأشخاص</h2>
+                <p>سجل المبالغ المستلمة كاش أو InstaPay وتحكم في فوائض وعجوزات المحفظة</p>
+            </div>
+        </div>
+
+        <div class="payments-layout">
+            
+            <div class="payment-card-panel">
+                <h3><i class="fa-solid fa-history"></i> سجل المقبوضات التاريخي</h3>
+                <div class="table-container">
+                    <table class="main-table">
+                        <thead>
+                            <tr>
+                                <th>التاريخ</th>
+                                <th>الاسم</th>
+                                <th>المبلغ المستلم</th>
+                                <th>الطريقة</th>
+                                <th>البيان والنوع</th>
+                            </tr>
+                        </thead>
+                        <tbody id="payments-history-body">
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: var(--text-muted, #94a3b8); padding: 30px;">اختر شخصاً أو راجع السجل العام...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="payment-card-panel">
+                <h3><i class="fa-solid fa-cash-register"></i> تسجيل دفعة جديدة</h3>
+                
+                <div class="form-group">
+                    <label for="select-person-pay">اختر الشخص</label>
+                    <select id="select-person-pay" name="select-person-pay">
+                        <option value="">-- اختر اسم الشخص --</option>
+                    </select>
+                </div>
+
+                <div id="filter-bill-method-section" class="form-group" style="display: none;">
+                    <label><i class="fa-solid fa-filter" style="color: #38bdf8;"></i> عرض المبالغ المستحقة عن فواتير:</label>
+                    <div class="custom-radio-group">
+                        <label class="custom-radio-option">
+                            <input type="radio" name="target-bill-method" value="all" checked> الكل
+                        </label>
+                        <label class="custom-radio-option">
+                            <input type="radio" name="target-bill-method" value="Credit Card"> Credit 💳
+                        </label>
+                        <label class="custom-radio-option">
+                            <input type="radio" name="target-bill-method" value="Cash"> كاش 💵
+                        </label>
+                        <label class="custom-radio-option">
+                            <input type="radio" name="target-bill-method" value="InstaPay"> InstaPay 📱
+                        </label>
+                    </div>
+                </div>
+
+                <div id="person-status-wrapper" style="display: none;">
+                    <div id="person-balance-box" class="status-box">
+                        الحساب الحالي: 0.00 ج.م
+                    </div>
+                </div>
+
+                <form id="payment-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="pay-amount">المبلغ المدفوع فعلياً (ج.م)</label>
+                        <input type="number" id="pay-amount" name="pay-amount" step="0.01" inputmode="decimal" placeholder="0.00" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>طريقة الاستلام الفعلية</label>
+                        <div class="custom-radio-group">
+                            <label class="custom-radio-option">
+                                <input type="radio" name="pay-method" value="InstaPay" checked>
+                                InstaPay <i class="fa-solid fa-mobile-screen-button" style="color: #4ade80;"></i>
+                            </label>
+                            <label class="custom-radio-option">
+                                <input type="radio" name="pay-method" value="Cash">
+                                كاش <i class="fa-solid fa-money-bill-wave" style="color: #f97316;"></i>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit-form">تأكيد تسوية الحساب</button>
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="js/theme.js"></script>
+    <script type="module" src="js/payments.js"></script>
+</body>
+</html>
